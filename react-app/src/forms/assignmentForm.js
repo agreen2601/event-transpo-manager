@@ -74,27 +74,6 @@ const AssignmentForm = (props) => {
       });
   };
 
-  // og
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   apiManager.getAllType("assignments").then((assignments) => {
-  //     const assign = assignments.find(
-  //       (assign) =>
-  //         assign.date_id === assignment.date_id &&
-  //         assign.driver_id === assignment.driver_id
-  //     );
-  //     if (assign === undefined) {
-  //       apiManager
-  //         .addType("assignments", assignment)
-  //         .then(() => props.history.push(`/route/view`));
-  //     } else {
-  //       alert(
-  //         `${assign.driver.name} has already been assigned to route ${assign.route.number} on ${assign.date.date}.`
-  //       );
-  //     }
-  //   });
-  // };
-
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">

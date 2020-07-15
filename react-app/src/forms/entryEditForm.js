@@ -7,19 +7,19 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import apiManager from "../api/apiManager";
 
-// "locations" and "events" fill the dropdowns, both "handle...change"s change the 3 "chosen"s (route dependent upon location work together)
+// "places" and "shuttles" fill the dropdowns, both "handle...change"s change the 3 "chosen"s (route dependent upon location work together)
 const EntryEditForm = (props) => {
-  const events = props.events;
-  const locations = props.locations;
+  const places = props.places;
   const routes = props.routes;
-  // const dates = props.dates
+  const shuttles = props.shuttles;
+  const dates = props.dates;
+  const chosenPlaceId = props.chosenPlaceId;
+  const chosenRoute = props.chosenRoute;
+  const handleChosenPlaceChange = props.handleChosenPlaceChange;
   const handleChosenRouteChange = props.handleChosenRouteChange;
   const [entry, setEntry] = useState({
-    event_id: "",
-    place_id: "",
     attendee_count: "",
     vehicle_number: "",
-    date: "",
     time: "",
   });
 
@@ -40,19 +40,24 @@ const EntryEditForm = (props) => {
   }, [props.match.params.entryId]);
 
   const editedEntry = {
-    id: props.match.params.entryId,
-    event_id: entry.event_id,
-    place_id: entry.place_id,
-    date: entry.date,
+    id: parseInt(props.match.params.entryId),
+    shuttle_id: entry.shuttle_id,
+    date_id: entry.date_id,
+    user_id: entry.user_id,
     attendee_count: entry.attendee_count,
     vehicle_number: entry.vehicle_number,
     time: entry.time,
   };
 
+  chosenRoute === ""
+    ? (editedEntry.place_id = entry.place_id)
+    : (editedEntry.place_id = chosenPlaceId);
+
   const handleSubmit = (e) => {
+    console.log(editedEntry);
     e.preventDefault();
-    apiManager.updateEntry(editedEntry).then(() => {
-      props.history.push("/location/log");
+    apiManager.updateType("entries", editedEntry).then(() => {
+      props.history.push("/log");
     });
   };
 
@@ -67,17 +72,17 @@ const EntryEditForm = (props) => {
             <Grid item xs={12} md={3}>
               <InputLabel>Event:</InputLabel>
               <Select
-                id="event_id"
+                id="shuttle_id"
                 native
                 onChange={handleEntryChange}
                 fullWidth
                 required
-                value={entry.event_id}
+                value={entry.shuttle_id}
               >
-                {events ? (
-                  events.map((event) => (
-                    <option key={event.id} value={parseInt(event.id)}>
-                      {event.name}
+                {shuttles ? (
+                  shuttles.map((shuttle) => (
+                    <option key={shuttle.id} value={parseInt(shuttle.id)}>
+                      {shuttle.name}
                     </option>
                   ))
                 ) : (
@@ -88,13 +93,14 @@ const EntryEditForm = (props) => {
             <Grid item xs={12} md={3}>
               <InputLabel>Route:</InputLabel>
               <Select
-                id="routeId"
+                id="route_id"
                 native
                 onChange={handleChosenRouteChange}
                 fullWidth
+                value={chosenRoute}
               >
                 <option aria-label="None" value="">
-                  Choose Route
+                  Choose Route (not required)
                 </option>
                 {routes ? (
                   routes.map((route) => (
@@ -109,37 +115,79 @@ const EntryEditForm = (props) => {
             </Grid>
             <Grid item xs={12} md={3}>
               <InputLabel>Location:</InputLabel>
+              {chosenRoute === "" ? (
+                <Select
+                  id="place_id"
+                  native
+                  onChange={handleEntryChange}
+                  fullWidth
+                  required
+                  value={entry.place_id}
+                >
+                  <option aria-label="None" value="">
+                    Choose Location
+                  </option>
+                  {places ? (
+                    places.map((place) => (
+                      <option key={place.id} value={parseInt(place.id)}>
+                        {place.name}
+                      </option>
+                    ))
+                  ) : (
+                    <></>
+                  )}
+                </Select>
+              ) : (
+                <Select
+                  id="place_id"
+                  native
+                  onChange={handleChosenPlaceChange}
+                  fullWidth
+                  required
+                  value={chosenPlaceId}
+                >
+                  <option aria-label="None" value="" data-name="">
+                    Choose Location
+                  </option>
+                  {places ? (
+                    places.map((place) => (
+                      <option
+                        key={place.id}
+                        value={parseInt(place.id)}
+                        data-name={place.name}
+                      >
+                        {place.name}
+                      </option>
+                    ))
+                  ) : (
+                    <></>
+                  )}
+                </Select>
+              )}
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <InputLabel>Date:</InputLabel>
               <Select
-                id="place_id"
+                id="date_id"
                 native
                 onChange={handleEntryChange}
                 fullWidth
                 required
-                value={entry.place_id}
+                value={entry.date_id}
               >
-                <option aria-label="None" value="">
-                  Choose Location
+                <option aria-label="None" value="" data-name="">
+                  Choose Date
                 </option>
-                {locations ? (
-                  locations.map((place) => (
-                    <option key={place.id} value={parseInt(place.id)}>
-                      {place.name}
+                {dates ? (
+                  dates.map((date) => (
+                    <option key={date.id} value={date.id} data-name={date.date}>
+                      {date.date}
                     </option>
                   ))
                 ) : (
                   <></>
                 )}
               </Select>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <InputLabel htmlFor="age-native-simple">Date: </InputLabel>
-              <TextField
-                id="date"
-                type="date"
-                fullWidth
-                value={entry.date}
-                onChange={handleEntryChange}
-              />
             </Grid>
             <Grid item xs={12} md={3}>
               <InputLabel htmlFor="age-native-simple">Time: </InputLabel>

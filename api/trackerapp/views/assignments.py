@@ -85,12 +85,12 @@ class Assignments(ViewSet):
     def update(self, request, pk=None):
 
         ogAssignment = Assignment.objects.get(pk=pk)
-        ogassignment.date_id = request.data["date_id"]
-        ogassignment.start_time = request.data["start_time"]
-        ogassignment.end_time = request.data["end_time"]
-        ogassignment.driver_id = request.data["driver_id"]
-        ogassignment.vehicle_id = request.data["vehicle_id"]
-        ogassignment.route_id = request.data["route_id"]
+        ogAssignment.date_id = request.data["date_id"]
+        ogAssignment.start_time = request.data["start_time"]
+        ogAssignment.end_time = request.data["end_time"]
+        ogAssignment.driver_id = request.data["driver_id"]
+        ogAssignment.vehicle_id = request.data["vehicle_id"]
+        ogAssignment.route_id = request.data["route_id"]
 
         ogAssignment.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)

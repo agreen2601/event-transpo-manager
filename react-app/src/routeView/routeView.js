@@ -41,7 +41,7 @@ const RouteView = (props) => {
         </Select>
       </Grid>
       {chosenDate !== "" ? (
-        <div className="date_card">
+        <div className="route_card">
           {routes.map((route) => (
             <RouteCard
               key={route.id}

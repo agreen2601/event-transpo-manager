@@ -10,34 +10,28 @@ import moment from "moment";
 
 const AssignmentAddForm = (props) => {
   const chosenDate = props.chosenDate;
+  const handleChosenDateChange = props.handleChosenDateChange;
   const [assignment, setAssignment] = useState({
-    start_time: "",
-    end_time: "",
-    driver_id: "",
-    vehicle_id: "",
-    // route_id: parseInt(props.match.params.routeId),
-    date_id: chosenDate
+    start_time: moment().format("HH:mm"),
+    end_time: "23:59",
   });
 
   assignment.route_id = props.match.params.routeId;
+  assignment.date_id = chosenDate;
 
-  console.log(parseInt(props.match.params.routeId));
-  console.log(chosenDate)
+  const [route, setRoute] = useState([]);
+  const getRoute = () => {
+    apiManager
+      .getSingleType("routes", props.match.params.routeId)
+      .then((r) => setRoute(r));
+  };
+
+  console.log(route);
 
   const [dates, setDates] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [drivers, setDrivers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
-
-  const handleAssignmentChange = (event) => {
-    const stateToChange = { ...assignment };
-    if (event.target.id === "start_time" || event.target.id === "end_time") {
-      stateToChange[event.target.id] = event.target.value;
-    } else {
-      stateToChange[event.target.id] = parseInt(event.target.value);
-    }
-    setAssignment(stateToChange);
-  };
 
   const getAllDropDowns = () => {
     return (
@@ -54,16 +48,23 @@ const AssignmentAddForm = (props) => {
         setDrivers(r);
       }),
       apiManager.getType("vehicles").then((r) => {
-        r.sort((a, b) => a.company.localeCompare(b.company)).sort((a, b) =>
-          a.number.localeCompare(b.number)
+        r.sort((a, b) => (a.number > b.number ? 1 : -1)).sort((a, b) =>
+          a.company.localeCompare(b.company)
         );
         setVehicles(r);
       })
     );
   };
 
+  const handleAssignmentChange = (e) => {
+    const stateToChange = { ...assignment };
+    stateToChange[e.target.id] = e.target.value;
+    setAssignment(stateToChange);
+  };
+
   useEffect(() => {
     getAllDropDowns();
+    getRoute();
   }, []);
 
   // get all drivers, check if driver already in system, post if not, send to route view
@@ -73,11 +74,8 @@ const AssignmentAddForm = (props) => {
       .getAssignmentsByDateDriver(assignment.date_id, assignment.driver_id)
       .then((assignments) => {
         if (assignments.length > 0) {
-          alert(
-            `This driver has already been assigned on this day.`
-          );
+          alert(`This driver has already been assigned on this day.`);
         } else {
-          console.log(assignment)
           apiManager
             .addType("assignments", assignment)
             .then(() => props.history.push(`/route/view`));
@@ -85,32 +83,37 @@ const AssignmentAddForm = (props) => {
       });
   };
 
-  // const submit = () => {
-  //   apiManager.getAssignments().then((assignments) => {
-  //     const assign = assignments.find(
-  //       (assign) =>
-  //         assign.dateId === assignment.dateId &&
-  //         assign.driverId === assignment.driverId
-  //     );
-  //     if (assign === undefined) {
-  //       apiManager
-  //         .addType("assignments", assignment)
-  //         .then(() => props.history.push(`/routeview`));
-  //     } else {
-  //       alert(
-  //         `${assign.driver.name} has already been assigned on ${assign.date.date}.`
-  //       );
-  //     }
-  //   });
-  // };
-
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Assignment Form
+        Create New Assignment for Route {route.name} {route.description}
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
+          <Grid item xs={12} md={3}>
+            <InputLabel>Date:</InputLabel>
+            <Select
+              id="date_id"
+              native
+              onChange={handleChosenDateChange}
+              fullWidth
+              required
+              value={chosenDate}
+            >
+              <option aria-label="None" value="" data-name="">
+                Choose Date
+              </option>
+              {dates ? (
+                dates.map((date) => (
+                  <option key={date.id} value={parseInt(date.id)}>
+                    {date.date}
+                  </option>
+                ))
+              ) : (
+                <></>
+              )}
+            </Select>
+          </Grid>
           <Grid item xs={12} md={3}>
             <InputLabel>Driver:</InputLabel>
             <Select
@@ -157,61 +160,13 @@ const AssignmentAddForm = (props) => {
               )}
             </Select>
           </Grid>
-          {/* <Grid item xs={12} md={3}>
-            <InputLabel>Route:</InputLabel>
-            <Select
-              id="route_id"
-              native
-              onChange={handleAssignmentChange}
-              fullWidth
-              required
-              value={props.match.params.routeId}
-            >
-              <option aria-label="None" value="" data-name="">
-                Choose Route
-              </option>
-              {routes ? (
-                routes.map((route) => (
-                  <option key={route.id} value={parseInt(route.id)}>
-                    {route.name} {route.description}
-                  </option>
-                ))
-              ) : (
-                <></>
-              )}
-            </Select>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InputLabel>Date:</InputLabel>
-            <Select
-              id="date_id"
-              native
-              onChange={handleAssignmentChange}
-              fullWidth
-              required
-              value={chosenDate}
-            >
-              <option aria-label="None" value="" data-name="">
-                Choose Date
-              </option>
-              {dates ? (
-                dates.map((date) => (
-                  <option key={date.id} value={parseInt(date.id)}>
-                    {date.date}
-                  </option>
-                ))
-              ) : (
-                <></>
-              )}
-            </Select>
-          </Grid> */}
           <Grid item xs={12} md={3}>
             <InputLabel htmlFor="age-native-simple">Start Time: </InputLabel>
             <TextField
               id="start_time"
               type="time"
               fullWidth
-              // value={moment().format("HH:mm")}
+              value={assignment.start_time}
               onChange={handleAssignmentChange}
             />
           </Grid>
@@ -221,7 +176,7 @@ const AssignmentAddForm = (props) => {
               id="end_time"
               type="time"
               fullWidth
-              // value={moment().format("23:59:00")}
+              value={assignment.end_time}
               onChange={handleAssignmentChange}
             />
           </Grid>

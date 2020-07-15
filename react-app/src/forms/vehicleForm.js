@@ -85,18 +85,19 @@ const VehicleForm = (props) => {
             <InputLabel htmlFor="age-native-simple">Capacity: </InputLabel>
             <TextField id="capacity" fullWidth onChange={handleVehicleChange} />
           </Grid>
-        </Grid>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isChecked}
-              onChange={handleIsCheckedChange}
-              name="checkedA"
-              color="primary"
+          <Grid item xs={12} md={3}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked}
+                  onChange={handleIsCheckedChange}
+                  color="primary"
+                />
+              }
+              label="ADA vehicle?"
             />
-          }
-          label="ADA vehicle?"
-        />
+          </Grid>
+        </Grid>
         <div className="submit-button">
           <Button type="submit" variant="contained" color="primary">
             Submit

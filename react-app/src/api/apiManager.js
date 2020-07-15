@@ -31,15 +31,15 @@ export default {
       body: JSON.stringify(obj),
     }).then((r) => r.json());
   },
-  updateEntry(entry) {
-    return fetch(`${baseurl}/entries/${entry.id}`, {
+  updateType(type, obj) {
+    return fetch(`${baseurl}/${type}/${obj.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
         Accept: "application/json",
         Authorization: `Token ${window.sessionStorage.getItem("token")}`,
       },
-      body: JSON.stringify(entry),
+      body: JSON.stringify(obj),
     });
   },
   deleteEntry(id) {
@@ -97,15 +97,6 @@ export default {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newType),
-    }).then((data) => data.json());
-  },
-  updateType(type, editedType) {
-    return fetch(`${baseurl}/${type}/${editedType.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedType),
     }).then((data) => data.json());
   },
   deleteTypeWithId(type, id) {

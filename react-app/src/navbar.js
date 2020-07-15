@@ -11,7 +11,7 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AddLocationIcon from "@material-ui/icons/AddLocation";
 import DirectionsIcon from "@material-ui/icons/Directions";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
-import { FaRegCalendarPlus } from "react-icons/fa";
+// import { FaRegCalendarPlus } from "react-icons/fa";
 
 const NavBar = (props) => {
   const hasUser = props.hasUser;

@@ -6,19 +6,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 
 const AssignmentCard = (props) => {
   const assignment = props.assignment;
-  // const [assignment, setAssignment] = useState([]);
-
-  // const getAssignment = (dateId, routeId, driverId) => {
-  //   apiManager
-  //     .getAssignmentByDateRouteDriver(dateId, routeId, driverId)
-  //     .then(APIResult => {
-  //       setAssignment(APIResult);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getAssignment(props.date.id, props.route.id, props.assignment.driverId);
-  // }, [props.date.id, props.route.id, props.assignment.driverId]);
+  const removeAssignment = props.removeAssignment;
 
   return (
     <div className="assignment_card">
@@ -27,17 +15,21 @@ const AssignmentCard = (props) => {
       {assignment.driver.isLocal === true ? <span>L</span> : null}
       <RemoveCircleOutlineIcon
         className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
+        onClick={() => removeAssignment(assignment.id)}
         style={{ fontSize: 20 }}
       />
       <FaExchangeAlt
         className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
+        onClick={() =>
+          props.history.push(
+            `/assignment/edit/${assignment.id}/${props.route.id}/${assignment.driver_id}/${assignment.vehicle_id}`
+          )
+        }
         style={{ fontSize: 17 }}
       />
       <FaRegEdit
         className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
+        onClick={() => props.history.push(`/driver/edit/${assignment.driver_id}/${assignment.vehicle_id}`)}
         style={{ fontSize: 20 }}
       />
       <div>

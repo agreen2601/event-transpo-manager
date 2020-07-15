@@ -77,7 +77,6 @@ const DriverForm = (props) => {
                 <Checkbox
                   checked={isChecked}
                   onChange={handleIsCheckedChange}
-                  name="checkedA"
                   color="primary"
                 />
               }

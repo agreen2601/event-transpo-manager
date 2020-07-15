@@ -28,11 +28,7 @@ const EntryForm = (props) => {
     attendee_count: "",
     vehicle_number: "",
     time: moment().format("HH:mm"),
-    // date_id: "",
   });
-
-  console.log(chosenDateId);
-
 
   // set values for entry from state from dropdowns, which carry over from form to log and back without changing until user chooses new
   entry.place_id = chosenPlaceId;
@@ -51,8 +47,6 @@ const EntryForm = (props) => {
   } else {
     isChecked = true;
   }
-
-  // entry.date_id = chosenDateId;
 
   // update state of entry upon form field change
   const handleEntryChange = (e) => {
@@ -123,14 +117,14 @@ const EntryForm = (props) => {
           <Grid item xs={12} md={3}>
             <InputLabel>Route:</InputLabel>
             <Select
-              id="routeId"
+              id="route_id"
               native
               onChange={handleChosenRouteChange}
               fullWidth
               value={chosenRoute}
             >
               <option aria-label="None" value="">
-                Choose Route
+                Choose Route (not required)
               </option>
               {routes ? (
                 routes.map((route) => (
