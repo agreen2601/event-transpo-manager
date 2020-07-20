@@ -6,6 +6,8 @@ const RouteGraph = (props) => {
   const chosenRoute = props.chosenRoute;
   const chosenPlaceId = props.chosenPlaceId;
 
+  console.log(entries);
+
   // round times down to nearest 10 minutes (slice off the last number) and put that and attendee counts into new array
   const times = entries.map((entry) => entry.time.slice(0, 4));
   const counts = entries.map((entry) => entry.attendee_count);

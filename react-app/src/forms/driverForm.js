@@ -32,7 +32,7 @@ const DriverForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     apiManager.getAllType("drivers").then((allDrivers) => {
-      driver.isLocal = isChecked
+      driver.isLocal = isChecked;
       const driverA = allDrivers.find(
         (driverA) => driverA.name === driver.name
       );
@@ -49,7 +49,7 @@ const DriverForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Driver Form
+        Add New Driver
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -72,6 +72,10 @@ const DriverForm = (props) => {
             />
           </Grid>
           <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Notes: </InputLabel>
+            <TextField id="notes" fullWidth onChange={handleDriverChange} />
+          </Grid>
+          <Grid item xs={12} md={3}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -82,10 +86,6 @@ const DriverForm = (props) => {
               }
               label="Local driver?"
             />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InputLabel htmlFor="age-native-simple">Notes: </InputLabel>
-            <TextField id="notes" fullWidth onChange={handleDriverChange} />
           </Grid>
         </Grid>
         <div className="submit-button">

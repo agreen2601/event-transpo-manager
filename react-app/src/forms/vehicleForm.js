@@ -55,7 +55,7 @@ const VehicleForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Vehicle Form
+        Add New Vehicle
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

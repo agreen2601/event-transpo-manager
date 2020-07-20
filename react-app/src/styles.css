@@ -10,11 +10,7 @@ body {
   margin-top: 20px;
 }
 
-.nav-icon,
-.action-icon {
-  margin: 0 5px 0 5px;
-}
-
+/* Navbar */
 .navbar {
   margin: -30px 0 5px 0;
   background-color: rgb(62, 84, 175);
@@ -35,26 +31,17 @@ body {
   display: block;
 }
 
-.route_icon {
-  margin-top: 10px;
-}
-
-.assignment_card {
-  margin-top: 10px;
-}
-
-.assignment_icon {
-  margin-left: 10px;
-  float: right;
-}
-
-.navbar-icon {
-  font-size: 30px;
+.nav-icon,
+.action-icon {
+  margin: 0 5px 0 5px;
+  padding: 10px 0 0 1px;
 }
 
 .assignment_icon:hover,
 .route_icon:hover,
-.navbar-icon:hover {
+.navbar-icon:hover,
+.action-icon:hover,
+.log_rows:hover {
   box-shadow: 0 8px 16px 0 black;
 }
 
@@ -64,18 +51,39 @@ body {
   flex-wrap: wrap;
 }
 
-.route_grid {
+.route_border {
+  border: solid;
   flex: 1 0 0;
   min-width: 320px;
-}
-
-.route_box {
   margin: 5px 5px 0 0;
   padding: 2px 3px 3px 3px;
   box-shadow: 2px 2px gray;
 }
 
-.route_box:hover {
+.route_border:hover {
   box-shadow: 0 8px 16px 0 black;
   background-color: rgba(250, 250, 250);
+}
+
+.route_icon {
+  margin-top: 10px;
+}
+
+/* Assignment Cards */
+
+.assignment_icon {
+  margin-left: 10px;
+  float: right;
+  padding: 2px;
+}
+
+.assignment_card {
+  margin-top: 10px;
+}
+
+/* Driver List  */
+
+.table_rows:hover {
+  box-shadow: 0 8px 16px 0 black;
+  color: red;
 }

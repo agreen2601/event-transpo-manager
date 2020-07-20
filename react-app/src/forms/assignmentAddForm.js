@@ -20,34 +20,28 @@ const AssignmentAddForm = (props) => {
   assignment.date_id = chosenDate;
 
   const [route, setRoute] = useState([]);
+
   const getRoute = () => {
     apiManager
       .getSingleType("routes", props.match.params.routeId)
       .then((r) => setRoute(r));
   };
 
-  console.log(route);
-
   const [dates, setDates] = useState([]);
-  const [routes, setRoutes] = useState([]);
   const [drivers, setDrivers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
 
   const getAllDropDowns = () => {
     return (
-      apiManager.getType("dates").then((r) => {
+      apiManager.getAllType("dates").then((r) => {
         r.sort((a, b) => (a.date > b.date ? 1 : -1));
         setDates(r);
       }),
-      apiManager.getType("routes").then((r) => {
-        r.sort((a, b) => (a.name > b.name ? 1 : -1));
-        setRoutes(r);
-      }),
-      apiManager.getType("drivers").then((r) => {
+      apiManager.getAllType("drivers").then((r) => {
         r.sort((a, b) => a.name.localeCompare(b.name));
         setDrivers(r);
       }),
-      apiManager.getType("vehicles").then((r) => {
+      apiManager.getAllType("vehicles").then((r) => {
         r.sort((a, b) => (a.number > b.number ? 1 : -1)).sort((a, b) =>
           a.company.localeCompare(b.company)
         );
@@ -74,10 +68,11 @@ const AssignmentAddForm = (props) => {
       .getAssignmentsByDateDriver(assignment.date_id, assignment.driver_id)
       .then((assignments) => {
         if (assignments.length > 0) {
+          // get single driver
           alert(`This driver has already been assigned on this day.`);
         } else {
           apiManager
-            .addType("assignments", assignment)
+            .postType("assignments", assignment)
             .then(() => props.history.push(`/route/view`));
         }
       });
@@ -86,7 +81,10 @@ const AssignmentAddForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Create New Assignment for Route {route.name} {route.description}
+        Create New Assignment for{" "}
+        <span style={{ color: route.color }}>
+          Route {route.name} {route.description}
+        </span>
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

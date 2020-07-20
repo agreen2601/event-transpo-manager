@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "../../node_modules/react";
-// import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import apiManager from "../api/apiManager";
@@ -46,38 +43,40 @@ const RouteCard = (props) => {
     fontWeight: "600",
   };
 
+  const routeBorder = {
+    borderColor: route.color,
+  };
+
+  // if (parseInt(route.name) !== "NaN") {
+  //   console.log(typeof route.name);
+  // } else {
+  //   console.log("Non a number", route.name);
+  // }
+
   return (
     <>
-      <Grid container spacing={2} className="route_grid">
-        <Grid item xs={12}>
-          <Box border={2} borderColor={route.color} className="route_box">
-            <Typography
-              component="h6"
-              className="route_name"
-              style={routeColor}
-            >
-              Route {routeName} {route.description}
-            </Typography>
-            <AddCircleOutlineIcon
-              className="route_icon"
-              onClick={() =>
-                props.history.push(`/assignment/add/${props.route.id}`)
-              }
-              style={{ fontSize: 20 }}
-              value={route.id}
+      <div className="route_border" style={routeBorder}>
+        <Typography component="h6" className="route_name" style={routeColor}>
+          Route {routeName} {route.description}
+        </Typography>
+        <AddCircleOutlineIcon
+          className="route_icon"
+          onClick={() =>
+            props.history.push(`/assignment/add/${props.route.id}`)
+          }
+          style={{ fontSize: 20 }}
+          value={route.id}
+        />
+        <div>
+          {assignments.map((assignment) => (
+            <AssignmentCard
+              key={assignment.id}
+              assignment={assignment}
+              removeAssignment={removeAssignment}
+              {...props}
             />
-            <div>
-              {assignments.map((assignment) => (
-                <AssignmentCard
-                  key={assignment.id}
-                  assignment={assignment}
-                  removeAssignment={removeAssignment}
-                  {...props}
-                />
-              ))}
-            </div>
-          </Box>
-        </Grid>
+          ))}
+        </div>
         {/* <div className="route_heading">
           {favoriteRouteIDs.length !== 0 ? (
             <span className="route_icon" id-="unStar" onClick={unStar}>
@@ -90,7 +89,7 @@ const RouteCard = (props) => {
             </span>
           ) : null}
         </div> */}
-      </Grid>
+      </div>
     </>
   );
 };

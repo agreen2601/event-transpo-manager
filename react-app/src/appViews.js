@@ -161,6 +161,7 @@ const AppViews = (props) => {
                   dates={dates}
                   routes={routes}
                   chosenDateId={chosenDateId}
+                  chosenDateName={chosenDateName}
                   chosenRoute={chosenRoute}
                   handleChosenRouteChange={handleChosenRouteChange}
                   handleChosenDateChange={handleChosenDateChange}

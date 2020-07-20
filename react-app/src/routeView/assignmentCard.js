@@ -8,11 +8,20 @@ const AssignmentCard = (props) => {
   const assignment = props.assignment;
   const removeAssignment = props.removeAssignment;
 
+  const localStyle = {
+    color: "green",
+    fontWeight: "600",
+  };
+
   return (
     <div className="assignment_card">
       <span>{assignment.driver.name} </span>
-      <span>{assignment.driver.phone_number} </span>
-      {assignment.driver.isLocal === true ? <span>L</span> : null}
+      <span style={{ fontWeight: "bold" }}>
+        {assignment.driver.phone_number}{" "}
+      </span>
+      {assignment.driver.isLocal === true ? (
+        <span style={localStyle}>L</span>
+      ) : null}
       <RemoveCircleOutlineIcon
         className="assignment_icon"
         onClick={() => removeAssignment(assignment.id)}
@@ -29,15 +38,23 @@ const AssignmentCard = (props) => {
       />
       <FaRegEdit
         className="assignment_icon"
-        onClick={() => props.history.push(`/driver/edit/${assignment.driver_id}/${assignment.vehicle_id}`)}
+        onClick={() =>
+          props.history.push(
+            `/driver/edit/${assignment.driver_id}/${assignment.vehicle_id}`
+          )
+        }
         style={{ fontSize: 20 }}
       />
       <div>
-        <span>{assignment.vehicle.number} </span>
+        <span style={{ fontWeight: "bold" }}>{assignment.vehicle.number} </span>
         <span>{assignment.vehicle.company} </span>
-        <span>{assignment.vehicle.capacity} </span>
+        <span style={{ fontWeight: "bold" }}>
+          {assignment.vehicle.capacity}{" "}
+        </span>
         <span>{assignment.vehicle.kind} </span>
-        {assignment.vehicle.isAda === true ? <FaWheelchair /> : null}
+        {assignment.vehicle.isAda === true ? (
+          <FaWheelchair style={{ color: "red" }} />
+        ) : null}
       </div>
     </div>
   );

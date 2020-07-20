@@ -47,7 +47,7 @@ const RouteReport = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5">
-        Route Reports
+        Ridership Graphs
       </Typography>
       <div className="drop-downs">
         <Grid container spacing={3}>

@@ -28,7 +28,7 @@ const EventTranspoTracker = (props) => {
 
   return (
     <span>
-      <Route exact path="/" render={() => <Redirect to="/entry/form" />} />
+      <Route exact path="/" render={() => <Redirect to="/log" />} />
       <Route
         exact
         path="/entry/form"

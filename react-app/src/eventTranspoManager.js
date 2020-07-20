@@ -12,19 +12,21 @@ import AssignmentForm from "./forms/assignmentForm";
 import AssignmentAddForm from "./forms/assignmentAddForm";
 import AssignmentEditForm from "./forms/assignmentEditForm";
 import RouteView from "./routeView/routeView";
+import DriverList from "./drivers/driverList";
 import "./styles.css";
 
 const EventTranspoManager = (props) => {
   const hasUser = props.hasUser;
   const dates = props.dates;
   const routes = props.routes;
-  const chosenDate = props.chosenDateId;
+  const chosenDateId = props.chosenDateId;
+  const chosenDateName = props.chosenDateName;
   const chosenRoute = props.chosenRoute;
   const handleChosenRouteChange = props.handleChosenRouteChange;
   const handleChosenDateChange = props.handleChosenDateChange;
 
   return (
-    <span>
+    <>
       <Route exact path="/" render={() => <Redirect to="/route/view" />} />
       <Route
         exact
@@ -101,7 +103,7 @@ const EventTranspoManager = (props) => {
         render={(props) =>
           hasUser ? (
             <AssignmentAddForm
-              chosenDate={chosenDate}
+              chosenDate={chosenDateId}
               handleChosenDateChange={handleChosenDateChange}
               {...props}
             />
@@ -125,8 +127,10 @@ const EventTranspoManager = (props) => {
             <RouteView
               dates={dates}
               routes={routes}
-              chosenDate={chosenDate}
+              chosenDate={chosenDateId}
+              chosenRoute={chosenRoute}
               handleChosenDateChange={handleChosenDateChange}
+              handleChosenRouteChange={handleChosenRouteChange}
               {...props}
             />
           ) : (
@@ -134,7 +138,38 @@ const EventTranspoManager = (props) => {
           )
         }
       />
-    </span>
+      <Route
+        exact
+        path="/driver/list"
+        render={(props) =>
+          hasUser ? (
+            <DriverList
+              dates={dates}
+              routes={routes}
+              chosenDateId={chosenDateId}
+              chosenDateName={chosenDateName}
+              chosenRoute={chosenRoute}
+              handleChosenDateChange={handleChosenDateChange}
+              handleChosenRouteChange={handleChosenRouteChange}
+              {...props}
+            />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+      {/* <Route
+        exact
+        path="/driver/search"
+        render={(props) =>
+          hasUser ? (
+            <DriverSearch searchField={submittedSearchField} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      /> */}
+    </>
   );
 };
 

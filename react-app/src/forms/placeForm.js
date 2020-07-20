@@ -44,7 +44,7 @@ const PlaceForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Location Form
+        Add New Location
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

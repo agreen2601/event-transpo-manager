@@ -23,7 +23,7 @@ const DateForm = () => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Date Form
+        Add New Date
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

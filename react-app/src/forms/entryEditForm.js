@@ -54,7 +54,6 @@ const EntryEditForm = (props) => {
     : (editedEntry.place_id = chosenPlaceId);
 
   const handleSubmit = (e) => {
-    console.log(editedEntry);
     e.preventDefault();
     apiManager.updateType("entries", editedEntry).then(() => {
       props.history.push("/log");

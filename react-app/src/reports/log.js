@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -8,9 +8,10 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import EditIcon from "@material-ui/icons/Edit";
+import { FaRegEdit } from "react-icons/fa";
 import apiManager from "../api/apiManager";
 
 const Log = (props) => {
@@ -32,14 +33,28 @@ const Log = (props) => {
   const allEntries = props.entries;
   const getEntries = props.getEntries;
 
+  const [searchField, setSearchField] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchField(e.target.value.toLowerCase());
+  };
+
   // filter entries based on dropdowns
   const filteredEntries = allEntries
-    .filter((each1) => each1.shuttle.name.includes(chosenShuttleName))
-    .filter((each2) => each2.place.name.includes(chosenPlaceName))
-    .filter((each3) => each3.place.route.name.includes(chosenRoute))
-    .filter((each4) => each4.date.date.includes(chosenDateName))
-    .sort((a, b) => a.time.localeCompare(b.time))
-    .sort((a, b) => a.date.date.localeCompare(b.date.date));
+    .filter((a) => a.shuttle.name.includes(chosenShuttleName))
+    .filter((b) => b.place.name.includes(chosenPlaceName))
+    .filter((c) => c.place.route.name.includes(chosenRoute))
+    .filter((d) => d.date.date.includes(chosenDateName))
+    .filter(
+      (e) =>
+        e.vehicle_number.includes(searchField) ||
+        e.time.includes(searchField) ||
+        e.attendee_count.toString().includes(searchField) ||
+        e.user.first_name.toLowerCase().includes(searchField) ||
+        e.user.last_name.toLowerCase().includes(searchField)
+    )
+    .sort((f, g) => f.time.localeCompare(g.time))
+    .sort((h, i) => h.date.date.localeCompare(i.date.date));
 
   let totalAttendeeCount = 0;
   if (filteredEntries.length !== 0) {
@@ -63,10 +78,20 @@ const Log = (props) => {
     getEntries();
   }, []);
 
+  const editIconStyle = {
+    fontSize: 20,
+    paddingBottom: 2,
+  };
+
+  //   let routeName = "";
+  // parseInt(route.name) < 10
+  //   ? (routeName = route.name.slice(1))
+  //   : (routeName = route.name);
+
   return (
     <>
       <Typography component="h1" variant="h5">
-        Logs
+        Ridership Logs
       </Typography>
       <div className="drop-downs">
         <Grid container spacing={3}>
@@ -174,6 +199,16 @@ const Log = (props) => {
               )}
             </Select>
           </Grid>
+          <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Search:</InputLabel>
+            <TextField
+              type="text"
+              id="keyword"
+              fullWidth
+              onChange={handleSearchChange}
+              value={searchField}
+            />
+          </Grid>
         </Grid>
       </div>
       <Typography variant="h6">
@@ -184,33 +219,25 @@ const Log = (props) => {
           <TableHead>
             <TableRow>
               <TableCell>Time</TableCell>
-              <TableCell align="right">Vehicle #</TableCell>
-              <TableCell align="right">Pax</TableCell>
-              {/* {chosenDate === "" ? ( */}
-              <TableCell align="right">Date</TableCell>
-              {/* ) : null} */}
-              {/* {chosenShuttleId === "" ? ( */}
-              <TableCell align="right">Shuttle</TableCell>
-              {/* ) : null} */}
-              {/* {chosenRoute === "" ? ( */}
-              <TableCell align="right">Route</TableCell>
-              {/* // ) : null} */}
-              {/* {chosenPlaceId === "" ? ( */}
-              <TableCell align="right">Location</TableCell>
-              {/* ) : null} */}
-              <TableCell align="right">Entered By</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Vehicle #</TableCell>
+              <TableCell>Pax</TableCell>
+              {chosenDateId === "" ? <TableCell>Date</TableCell> : null}
+              {chosenShuttleId === "" ? <TableCell>Shuttle</TableCell> : null}
+              {chosenRoute === "" ? <TableCell>Rt</TableCell> : null}
+              {chosenPlaceId === "" ? <TableCell>Location</TableCell> : null}
+              <TableCell>Entered By</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredEntries.map((entry) => (
-              <TableRow key={entry.id}>
+              <TableRow key={entry.id} className="table_rows">
                 <TableCell component="th" scope="entry">
                   {entry.time.slice(0, -3)}
                 </TableCell>
                 <TableCell
-                  align="right"
                   style={{ textDecoration: "underline" }}
+                  className="action-icon"
                   onClick={() =>
                     props.history.push(
                       `/assignment/finder/${entry.date_id}/${entry.vehicle_number}`
@@ -219,31 +246,32 @@ const Log = (props) => {
                 >
                   {entry.vehicle_number}
                 </TableCell>
-                <TableCell align="right">{entry.attendee_count}</TableCell>
-                {/* {chosenDate === "" ? ( */}
-                <TableCell align="right">{entry.date.date.slice(5)}</TableCell>
-                {/* ) : null} */}
-                {/* {chosenShuttleId === "" ? ( */}
-                <TableCell align="right">{entry.shuttle.name}</TableCell>
-                {/* ) : null} */}
-                {/* {chosenRoute === "" ? ( */}
-                <TableCell align="right">{entry.place.route.name}</TableCell>
-                {/* ) : null} */}
-                {/* {chosenPlaceId === "" ? ( */}
-                <TableCell align="right">{entry.place.name}</TableCell>
-                {/* ) : null} */}
-                <TableCell align="right">
+                <TableCell>{entry.attendee_count}</TableCell>
+                {chosenDateId === "" ? (
+                  <TableCell>{entry.date.date.slice(5)}</TableCell>
+                ) : null}
+                {chosenShuttleId === "" ? (
+                  <TableCell>{entry.shuttle.name}</TableCell>
+                ) : null}
+                {chosenRoute === "" ? (
+                  <TableCell>{entry.place.route.name}</TableCell>
+                ) : null}
+                {chosenPlaceId === "" ? (
+                  <TableCell>{entry.place.name}</TableCell>
+                ) : null}
+                <TableCell>
                   {entry.user.first_name} {entry.user.last_name}
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   {parseInt(window.sessionStorage.getItem("userID")) ===
                   entry.user_id ? (
                     <>
                       <span className="action-icon">
-                        <EditIcon
+                        <FaRegEdit
                           onClick={() =>
                             props.history.push(`/entry/edit/form/${entry.id}`)
                           }
+                          style={editIconStyle}
                         />
                       </span>
                       <span className="action-icon">

@@ -26,19 +26,19 @@ const AssignmentForm = (props) => {
 
   const getAllDropDowns = () => {
     return (
-      apiManager.getType("dates").then((r) => {
+      apiManager.getAllType("dates").then((r) => {
         r.sort((a, b) => (a.date > b.date ? 1 : -1));
         setDates(r);
       }),
-      apiManager.getType("routes").then((r) => {
+      apiManager.getAllType("routes").then((r) => {
         r.sort((a, b) => (a.name > b.name ? 1 : -1));
         setRoutes(r);
       }),
-      apiManager.getType("drivers").then((r) => {
+      apiManager.getAllType("drivers").then((r) => {
         r.sort((a, b) => a.name.localeCompare(b.name));
         setDrivers(r);
       }),
-      apiManager.getType("vehicles").then((r) => {
+      apiManager.getAllType("vehicles").then((r) => {
         r.sort((a, b) => (a.number > b.number ? 1 : -1)).sort((a, b) =>
           a.company.localeCompare(b.company)
         );
@@ -68,7 +68,7 @@ const AssignmentForm = (props) => {
           alert("This driver has already been assigned on this day.");
         } else {
           apiManager
-            .addType("assignments", assignment)
+            .postType("assignments", assignment)
             .then(() => props.history.push(`/route/view`));
         }
       });
@@ -77,7 +77,7 @@ const AssignmentForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Assignment Form
+        Create New Assignment
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

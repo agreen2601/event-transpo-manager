@@ -89,6 +89,15 @@ const DriverEditForm = (props) => {
             />
           </Grid>
           <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Notes: </InputLabel>
+            <TextField
+              id="notes"
+              fullWidth
+              onChange={handleDriverChange}
+              value={driver.notes}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -98,15 +107,6 @@ const DriverEditForm = (props) => {
                 />
               }
               label="Local driver?"
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InputLabel htmlFor="age-native-simple">Notes: </InputLabel>
-            <TextField
-              id="notes"
-              fullWidth
-              onChange={handleDriverChange}
-              value={driver.notes}
             />
           </Grid>
         </Grid>

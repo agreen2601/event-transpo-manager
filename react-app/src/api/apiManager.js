@@ -67,21 +67,11 @@ export default {
   },
 
   // manager
-  getAssignmentByDateRouteDriver(dateId, routeId, driverId) {
-    return fetch(
-      `${baseurl}/assignments/?dateId=${dateId}&routeId=${routeId}&driverId=${driverId}&_expand=driver&_expand=vehicle`
-    ).then((result) => result.json());
-  },
-  getType(type) {
-    return fetch(`${baseurl}/${type}?_embed=assignments`).then((result) =>
-      result.json()
-    );
-  },
-  getTypeWithId(type, id) {
-    return fetch(`${baseurl}/${type}/${id}?_embed=assignments`).then((result) =>
-      result.json()
-    );
-  },
+  // getAssignmentByDateRouteDriver(dateId, routeId, driverId) {
+  //   return fetch(
+  //     `${baseurl}/assignments/?dateId=${dateId}&routeId=${routeId}&driverId=${driverId}&_expand=driver&_expand=vehicle`
+  //   ).then((result) => result.json());
+  // },
   getUsers() {
     return fetch(`${baseurl}/users`).then((result) => result.json());
   },
@@ -89,15 +79,6 @@ export default {
     return fetch(
       `${baseurl}/favoriteRoutes?userId=${userId}&_expand=route`
     ).then((result) => result.json());
-  },
-  addType(type, newType) {
-    return fetch(`${baseurl}/${type}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newType),
-    }).then((data) => data.json());
   },
   deleteTypeWithId(type, id) {
     return fetch(`${baseurl}/${type}/${id}`, {
