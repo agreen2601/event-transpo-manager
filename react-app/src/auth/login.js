@@ -32,6 +32,7 @@ const Login = (props) => {
     apiManager.login(user).then((r) => {
       if ("token" in r) {
         props.setUserToken(r);
+        props.findSupervisor()
         props.history.push("/");
       } else {
         alert("User/password combination not found.");

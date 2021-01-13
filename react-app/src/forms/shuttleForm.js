@@ -6,7 +6,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Typography from "@material-ui/core/Typography";
 import apiManager from "../api/apiManager";
 
-const ShuttleForm = () => {
+const ShuttleForm = (props) => {
+  const getShuttles = props.getShuttles;
   const [shuttle, setShuttle] = useState({
     name: "",
   });
@@ -26,6 +27,7 @@ const ShuttleForm = () => {
       setShuttle({
         name: "",
       });
+      getShuttles();
     });
     alert("Success!");
   };
@@ -33,13 +35,18 @@ const ShuttleForm = () => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Shuttle Form
+        Add New Shuttle
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={3}>
             <InputLabel htmlFor="age-native-simple">Name: </InputLabel>
-            <TextField id="name" required fullWidth onChange={handleShuttleChange} />
+            <TextField
+              id="name"
+              required
+              fullWidth
+              onChange={handleShuttleChange}
+            />
           </Grid>
         </Grid>
         <div className="submit-button">

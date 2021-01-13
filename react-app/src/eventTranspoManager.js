@@ -1,76 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import DateForm from "./forms/dateForm";
 import ShuttleForm from "./forms/shuttleForm";
 import RouteForm from "./forms/routeForm";
 import PlaceForm from "./forms/placeForm";
 import DriverForm from "./forms/driverForm";
+import DriverEditForm from "./forms/driverEditForm";
 import VehicleForm from "./forms/vehicleForm";
+import VehicleEditForm from "./forms/vehicleEditForm";
 import AssignmentForm from "./forms/assignmentForm";
 import AssignmentAddForm from "./forms/assignmentAddForm";
+import AssignmentEditForm from "./forms/assignmentEditForm";
+import StaffEditForm from "./forms/editStaffForm";
+import StaffList from "./drivers/staffList";
 import RouteView from "./routeView/routeView";
-import apiManager from "./api/apiManager";
+import DriverList from "./drivers/driverList";
 import "./styles.css";
 
 const EventTranspoManager = (props) => {
   const hasUser = props.hasUser;
-
-  const [dates, setDates] = useState([]);
-  const [routes, setRoutes] = useState([]);
-  const [chosenDate, setChosenDate] = useState(1);
-  const [chosenRoute, setChosenRoute] = useState("");
-
-  const getDates = () => {
-    apiManager.getAllType("dates").then((r) => {
-      r.sort((a, b) => (a.date > b.date ? 1 : -1));
-      setDates(r);
-    });
-  };
-
-  const getRoutes = () => {
-    apiManager.getAllType("routes").then((r) => {
-      r.sort((a, b) => (a.name > b.name ? 1 : -1));
-      setRoutes(r);
-    });
-  };
-
-  const handleChosenDateChange = (e) => {
-    setChosenDate(e.target.value);
-  };
-
-  const handleChosenRouteChange = (e) => {
-    setChosenRoute(e.target.value);
-  };
-
-  useEffect(() => {
-    getDates();
-    getRoutes();
-  }, []);
+  const isSupervisor = props.isSupervisor;
+  const isStaff = props.isStaff;
+  const dates = props.dates;
+  const routes = props.routes;
+  const chosenDateId = props.chosenDateId;
+  const chosenDateName = props.chosenDateName;
+  const chosenRoute = props.chosenRoute;
+  const handleChosenRouteChange = props.handleChosenRouteChange;
+  const handleChosenDateChange = props.handleChosenDateChange;
+  const getDates = props.getDates;
+  const getShuttles = props.getShuttles;
+  const getRoutes = props.getRoutes;
+  const getPlaces = props.getPlaces;
+  const [driverId, setDriverId] = useState(1);
+  const [vehicleId, setVehicleId] = useState(1);
 
   return (
-    <span>
+    <>
       <Route exact path="/" render={() => <Redirect to="/route/view" />} />
       <Route
         exact
         path="/date/form"
-        render={() => (hasUser ? <DateForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <DateForm getDates={getDates} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/shuttle/form"
-        render={() => (hasUser ? <ShuttleForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <ShuttleForm getShuttles={getShuttles} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/route/form"
-        render={() => (hasUser ? <RouteForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <RouteForm getRoutes={getRoutes} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/location/form"
         render={() =>
           hasUser ? (
-            <PlaceForm routes={routes} {...props} />
+            <PlaceForm routes={routes} getPlaces={getPlaces} {...props} />
           ) : (
             <Redirect to="/login" />
           )
@@ -80,14 +86,36 @@ const EventTranspoManager = (props) => {
         exact
         path="/driver/form"
         render={(props) =>
-          hasUser ? <DriverForm {...props} /> : <Redirect to="/login" />
+          hasUser ? (
+            <DriverForm setDriverId={setDriverId} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+      <Route
+        exact
+        path="/driver/edit/:driverId(\d+)/:vehicleId(\d+)"
+        render={(props) =>
+          hasUser ? <DriverEditForm {...props} /> : <Redirect to="/login" />
         }
       />
       <Route
         exact
         path="/vehicle/form"
         render={(props) =>
-          hasUser ? <VehicleForm {...props} /> : <Redirect to="/login" />
+          hasUser ? (
+            <VehicleForm setVehicleId={setVehicleId} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+      <Route
+        exact
+        path="/vehicle/edit/:driverId(\d+)/:vehicleId(\d+)"
+        render={(props) =>
+          hasUser ? <VehicleEditForm {...props} /> : <Redirect to="/login" />
         }
       />
       <Route
@@ -96,8 +124,10 @@ const EventTranspoManager = (props) => {
         render={(props) =>
           hasUser ? (
             <AssignmentForm
-              chosenRoute={chosenRoute}
-              handleChosenRouteChange={handleChosenRouteChange}
+              chosenDate={chosenDateId}
+              handleChosenDateChange={handleChosenDateChange}
+              driverId={driverId}
+              vehicleId={vehicleId}
               {...props}
             />
           ) : (
@@ -111,7 +141,8 @@ const EventTranspoManager = (props) => {
         render={(props) =>
           hasUser ? (
             <AssignmentAddForm
-              chosenDate={chosenDate}
+              chosenDate={chosenDateId}
+              handleChosenDateChange={handleChosenDateChange}
               {...props}
             />
           ) : (
@@ -121,13 +152,29 @@ const EventTranspoManager = (props) => {
       />
       <Route
         exact
+        path="/assignment/edit/:assignmentId(\d+)/:routeId(\d+)/:driverId(\d+)/:vehicleId(\d+)"
+        render={(props) =>
+          hasUser ? <AssignmentEditForm {...props} /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        exact
+        path="/staff/edit/:userId(\d+)"
+        render={(props) =>
+          hasUser ? <StaffEditForm {...props} /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        exact
         path="/route/view"
         render={(props) =>
           hasUser ? (
             <RouteView
+              isStaff={isStaff}
+              isSupervisor={isSupervisor}
               dates={dates}
               routes={routes}
-              chosenDate={chosenDate}
+              chosenDate={chosenDateId}
               chosenRoute={chosenRoute}
               handleChosenDateChange={handleChosenDateChange}
               handleChosenRouteChange={handleChosenRouteChange}
@@ -138,7 +185,42 @@ const EventTranspoManager = (props) => {
           )
         }
       />
-    </span>
+      <Route
+        exact
+        path="/driver/list"
+        render={(props) =>
+          hasUser ? (
+            <DriverList
+              dates={dates}
+              routes={routes}
+              chosenDateId={chosenDateId}
+              chosenDateName={chosenDateName}
+              chosenRoute={chosenRoute}
+              handleChosenDateChange={handleChosenDateChange}
+              handleChosenRouteChange={handleChosenRouteChange}
+              {...props}
+            />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+      <Route
+        exact
+        path="/staff/list"
+        render={(props) =>
+          hasUser ? (
+            <StaffList
+              isStaff={isStaff}
+              isSupervisor={isSupervisor}
+              {...props}
+            />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+    </>
   );
 };
 

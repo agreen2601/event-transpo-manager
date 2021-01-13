@@ -6,47 +6,72 @@ import { FaExchangeAlt } from "react-icons/fa";
 
 const AssignmentCard = (props) => {
   const assignment = props.assignment;
-  // const [assignment, setAssignment] = useState([]);
+  const chosenRoute = props.chosenRoute;
+  const removeAssignment = props.removeAssignment;
 
-  // const getAssignment = (dateId, routeId, driverId) => {
-  //   apiManager
-  //     .getAssignmentByDateRouteDriver(dateId, routeId, driverId)
-  //     .then(APIResult => {
-  //       setAssignment(APIResult);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getAssignment(props.date.id, props.route.id, props.assignment.driverId);
-  // }, [props.date.id, props.route.id, props.assignment.driverId]);
+  const localStyle = {
+    color: "green",
+    fontWeight: "600",
+  };
 
   return (
     <div className="assignment_card">
       <span>{assignment.driver.name} </span>
-      <span>{assignment.driver.phone_number} </span>
-      {assignment.driver.isLocal === true ? <span>L</span> : null}
-      <RemoveCircleOutlineIcon
-        className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
-        style={{ fontSize: 20 }}
-      />
-      <FaExchangeAlt
-        className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
-        style={{ fontSize: 17 }}
-      />
+      <span style={{ fontWeight: "bold" }}>
+        {assignment.driver.phone_number}{" "}
+      </span>
+      {assignment.driver.isLocal === true ? (
+        <span style={localStyle}>L</span>
+      ) : null}
+      {props.isSupervisor === true || props.isStaff === true ? (
+        <>
+          <RemoveCircleOutlineIcon
+            className="assignment_icon"
+            onClick={() => removeAssignment(assignment.id)}
+            style={{ fontSize: 20 }}
+          />
+          <FaExchangeAlt
+            className="assignment_icon"
+            onClick={() =>
+              props.history.push(
+                `/assignment/edit/${assignment.id}/${props.route.id}/${assignment.driver_id}/${assignment.vehicle_id}`
+              )
+            }
+            style={{ fontSize: 17 }}
+          />
+        </>
+      ) : null}
       <FaRegEdit
         className="assignment_icon"
-        // onClick={() => props.history.push(`/add/${props.route.id}`)}
+        onClick={() =>
+          props.history.push(
+            `/driver/edit/${assignment.driver_id}/${assignment.vehicle_id}`
+          )
+        }
         style={{ fontSize: 20 }}
       />
       <div>
-        <span>{assignment.vehicle.number} </span>
+        <span style={{ fontWeight: "bold" }}>{assignment.vehicle.number} </span>
         <span>{assignment.vehicle.company} </span>
-        <span>{assignment.vehicle.capacity} </span>
+        <span style={{ fontWeight: "bold" }}>
+          {assignment.vehicle.capacity}{" "}
+        </span>
         <span>{assignment.vehicle.kind} </span>
-        {assignment.vehicle.isAda === true ? <FaWheelchair /> : null}
+        {assignment.vehicle.isAda === true ? (
+          <FaWheelchair style={{ color: "red" }} />
+        ) : null}
       </div>
+      {chosenRoute === "" ? (
+        <></>
+      ) : (
+        <>
+          <span>
+            {assignment.start_time.slice(0, -3)} -{" "}
+            {assignment.end_time.slice(0, -3)}
+          </span>
+          <div>{assignment.driver.notes}</div>
+        </>
+      )}
     </div>
   );
 };

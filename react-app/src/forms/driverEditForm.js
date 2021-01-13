@@ -1,108 +1,125 @@
 import React, { useState, useEffect } from "../../node_modules/react";
-import apiManager from "../apiManager/apiManager";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import apiManager from "../api/apiManager";
 
-const DriverEditForm = props => {
+const DriverEditForm = (props) => {
   const [driver, setDriver] = useState({
     name: "",
-    phoneNumber: "",
-    local: "",
-    notes: ""
+    phone_number: "",
+    notes: "",
+    isLocal: Boolean,
   });
 
-  const handleDriverChange = event => {
+  var [isChecked, setIsChecked] = useState(false);
+  const handleIsCheckedChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  useEffect(() => {
+    apiManager
+      .getSingleType("drivers", props.match.params.driverId)
+      .then((driver) => {
+        setDriver(driver);
+        setIsChecked(driver.isLocal);
+      });
+  }, [props.match.params.driverId]);
+
+  const handleDriverChange = (event) => {
     const stateToChange = { ...driver };
     stateToChange[event.target.id] = event.target.value;
     setDriver(stateToChange);
   };
 
-  useEffect(() => {
-    apiManager
-      .getTypeWithId("drivers", props.match.params.driverId)
-      .then(driver => {
-        setDriver(driver);
-      });
-  }, [props.match.params.driverId]);
+  const editedDriver = {
+    id: props.match.params.driverId,
+    name: driver.name,
+    phone_number: driver.phone_number,
+    isLocal: isChecked,
+    notes: driver.notes,
+  };
 
-  const submit = () => {
-    const editedDriver = {
-      id: props.match.params.driverId,
-      name: driver.name,
-      phoneNumber: driver.phoneNumber,
-      local: driver.local,
-      notes: driver.notes
-    };
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
     apiManager
       .updateType("drivers", editedDriver)
       .then(() =>
         props.history.push(
-          `/editvehicle/${props.match.params.driverId}/${props.match.params.vehicleId}`
+          `/vehicle/edit/${props.match.params.driverId}/${props.match.params.vehicleId}`
         )
       );
   };
 
+  const skip = () => {
+    props.history.push(
+      `/vehicle/edit/${props.match.params.driverId}/${props.match.params.vehicleId}`
+    );
+  };
+
   return (
     <>
-      <form>
-        <h3>Edit Details</h3>
-        <fieldset className="form">
-          <div>
-            <label>Driver Name: </label>
-            <input
-              type="text"
+      <Typography component="h1" variant="h5" className="page-header">
+        Edit Driver Info
+      </Typography>
+      <form className="drop-downs" onSubmit={handleSubmit}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Name: </InputLabel>
+            <TextField
+              id="name"
+              fullWidth
               required
               onChange={handleDriverChange}
-              id="name"
               value={driver.name}
             />
-          </div>
-
-          <div>
-            <label>Phone Number: </label>
-            <input
-              type="text"
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Phone Number: </InputLabel>
+            <TextField
+              id="phone_number"
+              fullWidth
               required
               onChange={handleDriverChange}
-              id="phoneNumber"
-              value={driver.phoneNumber}
+              value={driver.phone_number}
             />
-          </div>
-
-          <div>
-            <label>Local? </label>
-            <label>Yes</label>
-            <input
-              type="radio"
-              name="local"
-              onChange={handleDriverChange}
-              id="local"
-              value="L"
-            />
-            <label>No</label>
-            <input
-              type="radio"
-              name="local"
-              onChange={handleDriverChange}
-              id="local"
-              value=""
-              defaultChecked
-            />
-          </div>
-
-          <div>
-            <label>Notes: </label>
-            <textarea
-              type="text"
-              onChange={handleDriverChange}
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <InputLabel htmlFor="age-native-simple">Notes: </InputLabel>
+            <TextField
               id="notes"
+              fullWidth
+              onChange={handleDriverChange}
               value={driver.notes}
             />
-          </div>
-
-          <button type="button" onClick={submit}>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked}
+                  onChange={handleIsCheckedChange}
+                  color="primary"
+                />
+              }
+              label="Local driver?"
+            />
+          </Grid>
+        </Grid>
+        <div className="submit-button">
+          <Button type="submit" variant="contained" color="primary">
             Submit
-          </button>
-        </fieldset>
+          </Button>
+        </div>
+        <div className="submit-button">
+          <Button variant="contained" color="primary" onClick={skip}>
+            Skip
+          </Button>
+        </div>
       </form>
     </>
   );

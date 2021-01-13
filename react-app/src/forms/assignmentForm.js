@@ -9,15 +9,17 @@ import apiManager from "../api/apiManager";
 import moment from "moment";
 
 const AssignmentForm = (props) => {
-  const chosenRoute = props.chosenRoute;
-  const handleChosenRouteChange = props.handleChosenRouteChange;
+  const chosenDate = props.chosenDate
+  const handleChosenDateChange = props.handleChosenDateChange
   const [assignment, setAssignment] = useState({
     start_time: moment().format("HH:mm"),
     end_time: "23:59",
-    vehicle_id: "",
-    driver_id: "",
-    date_id: "",
+    vehicle_id: props.vehicleId,
+    driver_id: props.driverId,
+    route_id: "",
   });
+
+  assignment.date_id = chosenDate;
 
   const [dates, setDates] = useState([]);
   const [routes, setRoutes] = useState([]);
@@ -26,19 +28,19 @@ const AssignmentForm = (props) => {
 
   const getAllDropDowns = () => {
     return (
-      apiManager.getType("dates").then((r) => {
+      apiManager.getAllType("dates").then((r) => {
         r.sort((a, b) => (a.date > b.date ? 1 : -1));
         setDates(r);
       }),
-      apiManager.getType("routes").then((r) => {
+      apiManager.getAllType("routes").then((r) => {
         r.sort((a, b) => (a.name > b.name ? 1 : -1));
         setRoutes(r);
       }),
-      apiManager.getType("drivers").then((r) => {
+      apiManager.getAllType("drivers").then((r) => {
         r.sort((a, b) => a.name.localeCompare(b.name));
         setDrivers(r);
       }),
-      apiManager.getType("vehicles").then((r) => {
+      apiManager.getAllType("vehicles").then((r) => {
         r.sort((a, b) => (a.number > b.number ? 1 : -1)).sort((a, b) =>
           a.company.localeCompare(b.company)
         );
@@ -59,7 +61,6 @@ const AssignmentForm = (props) => {
 
   // get all drivers, check if driver already in system, post if not, send to route view
   const handleSubmit = (e) => {
-    assignment.route_id = chosenRoute;
     e.preventDefault();
     apiManager
       .getAssignmentsByDateDriver(assignment.date_id, assignment.driver_id)
@@ -68,37 +69,16 @@ const AssignmentForm = (props) => {
           alert("This driver has already been assigned on this day.");
         } else {
           apiManager
-            .addType("assignments", assignment)
+            .postType("assignments", assignment)
             .then(() => props.history.push(`/route/view`));
         }
       });
   };
 
-  // og
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   apiManager.getAllType("assignments").then((assignments) => {
-  //     const assign = assignments.find(
-  //       (assign) =>
-  //         assign.date_id === assignment.date_id &&
-  //         assign.driver_id === assignment.driver_id
-  //     );
-  //     if (assign === undefined) {
-  //       apiManager
-  //         .addType("assignments", assignment)
-  //         .then(() => props.history.push(`/route/view`));
-  //     } else {
-  //       alert(
-  //         `${assign.driver.name} has already been assigned to route ${assign.route.number} on ${assign.date.date}.`
-  //       );
-  //     }
-  //   });
-  // };
-
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Assignment Form
+        Create New Assignment
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -110,7 +90,7 @@ const AssignmentForm = (props) => {
               onChange={handleAssignmentChange}
               fullWidth
               required
-              // value="driver_id"
+              value={assignment.driver_id}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Driver
@@ -134,7 +114,7 @@ const AssignmentForm = (props) => {
               onChange={handleAssignmentChange}
               fullWidth
               required
-              // value="vehicle_id"
+              value={assignment.vehicle_id}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Vehicle
@@ -155,10 +135,10 @@ const AssignmentForm = (props) => {
             <Select
               id="route_id"
               native
-              onChange={handleChosenRouteChange}
+              onChange={handleAssignmentChange}
               fullWidth
               required
-              value={chosenRoute}
+              // value={chosenRoute}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Route
@@ -179,10 +159,10 @@ const AssignmentForm = (props) => {
             <Select
               id="date_id"
               native
-              onChange={handleAssignmentChange}
+              onChange={handleChosenDateChange}
               fullWidth
               required
-              // value="date_id"
+              value={chosenDate}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Date

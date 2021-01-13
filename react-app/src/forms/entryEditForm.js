@@ -7,21 +7,17 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import apiManager from "../api/apiManager";
 
-// "locations" and "events" fill the dropdowns, both "handle...change"s change the 3 "chosen"s (route dependent upon location work together)
+// "places" and "shuttles" fill the dropdowns, both "handle...change"s change the 3 "chosen"s (route dependent upon location work together)
 const EntryEditForm = (props) => {
-  const events = props.events;
-  const locations = props.locations;
-  const routes = props.routes;
-  // const dates = props.dates
-  const handleChosenRouteChange = props.handleChosenRouteChange;
+  const shuttles = props.shuttles;
+  const dates = props.dates;
   const [entry, setEntry] = useState({
-    event_id: "",
-    place_id: "",
     attendee_count: "",
     vehicle_number: "",
-    date: "",
     time: "",
   });
+
+  const [places, setPlaces] = useState([]);
 
   // update state of entry upon form field change
   const handleEntryChange = (e) => {
@@ -37,13 +33,18 @@ const EntryEditForm = (props) => {
       .then((entry) => {
         setEntry(entry);
       });
+      apiManager.getAllType("places").then((r) => {
+        r.sort((a, b) => a.name.localeCompare(b.name));
+        setPlaces(r);
+      });
   }, [props.match.params.entryId]);
 
   const editedEntry = {
-    id: props.match.params.entryId,
-    event_id: entry.event_id,
+    id: parseInt(props.match.params.entryId),
+    shuttle_id: entry.shuttle_id,
+    date_id: entry.date_id,
     place_id: entry.place_id,
-    date: entry.date,
+    user_id: entry.user_id,
     attendee_count: entry.attendee_count,
     vehicle_number: entry.vehicle_number,
     time: entry.time,
@@ -51,8 +52,8 @@ const EntryEditForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    apiManager.updateEntry(editedEntry).then(() => {
-      props.history.push("/location/log");
+    apiManager.updateType("entries", editedEntry).then(() => {
+      props.history.push("/log");
     });
   };
 
@@ -67,39 +68,17 @@ const EntryEditForm = (props) => {
             <Grid item xs={12} md={3}>
               <InputLabel>Event:</InputLabel>
               <Select
-                id="event_id"
+                id="shuttle_id"
                 native
                 onChange={handleEntryChange}
                 fullWidth
                 required
-                value={entry.event_id}
+                value={entry.shuttle_id}
               >
-                {events ? (
-                  events.map((event) => (
-                    <option key={event.id} value={parseInt(event.id)}>
-                      {event.name}
-                    </option>
-                  ))
-                ) : (
-                  <></>
-                )}
-              </Select>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <InputLabel>Route:</InputLabel>
-              <Select
-                id="routeId"
-                native
-                onChange={handleChosenRouteChange}
-                fullWidth
-              >
-                <option aria-label="None" value="">
-                  Choose Route
-                </option>
-                {routes ? (
-                  routes.map((route) => (
-                    <option key={route.id} value={route.name}>
-                      {route.name} {route.description}
+                {shuttles ? (
+                  shuttles.map((shuttle) => (
+                    <option key={shuttle.id} value={parseInt(shuttle.id)}>
+                      {shuttle.name}
                     </option>
                   ))
                 ) : (
@@ -117,12 +96,16 @@ const EntryEditForm = (props) => {
                 required
                 value={entry.place_id}
               >
-                <option aria-label="None" value="">
+                <option aria-label="None" value="" data-name="">
                   Choose Location
                 </option>
-                {locations ? (
-                  locations.map((place) => (
-                    <option key={place.id} value={parseInt(place.id)}>
+                {places ? (
+                  places.map((place) => (
+                    <option
+                      key={place.id}
+                      value={parseInt(place.id)}
+                      data-name={place.name}
+                    >
                       {place.name}
                     </option>
                   ))
@@ -132,14 +115,28 @@ const EntryEditForm = (props) => {
               </Select>
             </Grid>
             <Grid item xs={12} md={3}>
-              <InputLabel htmlFor="age-native-simple">Date: </InputLabel>
-              <TextField
-                id="date"
-                type="date"
-                fullWidth
-                value={entry.date}
+              <InputLabel>Date:</InputLabel>
+              <Select
+                id="date_id"
+                native
                 onChange={handleEntryChange}
-              />
+                fullWidth
+                required
+                value={entry.date_id}
+              >
+                <option aria-label="None" value="" data-name="">
+                  Choose Date
+                </option>
+                {dates ? (
+                  dates.map((date) => (
+                    <option key={date.id} value={date.id} data-name={date.date}>
+                      {date.date}
+                    </option>
+                  ))
+                ) : (
+                  <></>
+                )}
+              </Select>
             </Grid>
             <Grid item xs={12} md={3}>
               <InputLabel htmlFor="age-native-simple">Time: </InputLabel>

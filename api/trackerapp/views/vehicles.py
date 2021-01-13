@@ -18,7 +18,7 @@ class VehicleSerializer(serializers.HyperlinkedModelSerializer):
             view_name='vehicle',
             lookup_field='id'
         )
-        fields = ('id', 'company', 'number', 'kind', 'isAda', 'isAda')
+        fields = ('id', 'company', 'number', 'kind', 'capacity', 'isAda')
 
 
 class Vehicles(ViewSet):
@@ -56,11 +56,11 @@ class Vehicles(ViewSet):
     def update(self, request, pk=None):
 
         ogVehicle = Vehicle.objects.get(pk=pk)
-        ogvehicle.company = request.data["company"]
-        ogvehicle.number = request.data["number"]
-        ogvehicle.kind = request.data["kind"]
-        ogvehicle.capacity = request.data["notes"]
-        ogvehicle.isAda = request.data["isAda"]
+        ogVehicle.company = request.data["company"]
+        ogVehicle.number = request.data["number"]
+        ogVehicle.kind = request.data["kind"]
+        ogVehicle.capacity = request.data["capacity"]
+        ogVehicle.isAda = request.data["isAda"]
 
         ogVehicle.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)

@@ -41,8 +41,9 @@ const VehicleForm = (props) => {
           vehicleA.number === vehicle.number
       );
       if (vehicleA === undefined) {
-        apiManager.postType("vehicles", vehicle);
-        // .then((result) => props.setVehicleId(result.id));
+        apiManager
+          .postType("vehicles", vehicle)
+          .then((result) => props.setVehicleId(result.id));
       } else {
         alert("Vehicle already in database.");
       }
@@ -55,7 +56,7 @@ const VehicleForm = (props) => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Vehicle Form
+        Add New Vehicle
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -85,18 +86,19 @@ const VehicleForm = (props) => {
             <InputLabel htmlFor="age-native-simple">Capacity: </InputLabel>
             <TextField id="capacity" fullWidth onChange={handleVehicleChange} />
           </Grid>
-        </Grid>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isChecked}
-              onChange={handleIsCheckedChange}
-              name="checkedA"
-              color="primary"
+          <Grid item xs={12} md={3}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked}
+                  onChange={handleIsCheckedChange}
+                  color="primary"
+                />
+              }
+              label="ADA vehicle?"
             />
-          }
-          label="ADA vehicle?"
-        />
+          </Grid>
+        </Grid>
         <div className="submit-button">
           <Button type="submit" variant="contained" color="primary">
             Submit

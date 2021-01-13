@@ -15,9 +15,8 @@ const AssignmentFinder = (props) => {
     each.vehicle.number.includes(props.match.params.vehNum)
   );
 
-  console.log(assignments)
-
   // something wrong with doing it by date
+  // not sure now actually, seems fine on 07/16
 
   useEffect(() => {
     apiManager
@@ -36,28 +35,22 @@ const AssignmentFinder = (props) => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Vehicle Company</TableCell>
-              <TableCell align="right">Vehicle Number</TableCell>
-              <TableCell align="right">Driver Name</TableCell>
-              <TableCell align="right">Phone Number</TableCell>
-              <TableCell align="right">Route</TableCell>
+              <TableCell>Vehicle Company</TableCell>
+              <TableCell>Vehicle Number</TableCell>
+              <TableCell>Driver Name</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Route</TableCell>
             </TableRow>
           </TableHead>
           {filteredAssignments.length !== 0 ? (
             <TableBody>
               {filteredAssignments.map((assignment) => (
                 <TableRow key={assignment.id}>
-                  <TableCell align="right">
-                    {assignment.vehicle.company}
-                  </TableCell>
-                  <TableCell align="right">
-                    {assignment.vehicle.number}
-                  </TableCell>
-                  <TableCell align="right">{assignment.driver.name}</TableCell>
-                  <TableCell align="right">
-                    {assignment.driver.phone_number}
-                  </TableCell>
-                  <TableCell align="right">
+                  <TableCell>{assignment.vehicle.company}</TableCell>
+                  <TableCell>{assignment.vehicle.number}</TableCell>
+                  <TableCell>{assignment.driver.name}</TableCell>
+                  <TableCell>{assignment.driver.phone_number}</TableCell>
+                  <TableCell>
                     {assignment.route.name} {assignment.route.description}
                   </TableCell>
                 </TableRow>

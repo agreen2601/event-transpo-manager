@@ -6,7 +6,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Typography from "@material-ui/core/Typography";
 import apiManager from "../api/apiManager";
 
-const RouteForm = () => {
+const RouteForm = (props) => {
+  const getRoutes = props.getRoutes;
   const [route, setRoute] = useState({
     name: "",
     color: "",
@@ -32,6 +33,7 @@ const RouteForm = () => {
         color: "",
         description: "",
       });
+      getRoutes();
     });
     alert("Success!");
   };
@@ -39,7 +41,7 @@ const RouteForm = () => {
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
-        Route Form
+        Add New Route
       </Typography>
       <form className="drop-downs" onSubmit={handleSubmit}>
         <Grid container spacing={3}>

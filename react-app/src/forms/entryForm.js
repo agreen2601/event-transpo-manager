@@ -6,7 +6,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import FormControl from "@material-ui/core/FormControl";
 import Checkbox from "@material-ui/core/Checkbox";
+// import MenuItem from "@material-ui/core/MenuItem";
 import apiManager from "../api/apiManager";
 import moment from "moment";
 
@@ -28,11 +30,7 @@ const EntryForm = (props) => {
     attendee_count: "",
     vehicle_number: "",
     time: moment().format("HH:mm"),
-    // date_id: "",
   });
-
-  console.log(chosenDateId);
-
 
   // set values for entry from state from dropdowns, which carry over from form to log and back without changing until user chooses new
   entry.place_id = chosenPlaceId;
@@ -51,8 +49,6 @@ const EntryForm = (props) => {
   } else {
     isChecked = true;
   }
-
-  // entry.date_id = chosenDateId;
 
   // update state of entry upon form field change
   const handleEntryChange = (e) => {
@@ -74,15 +70,17 @@ const EntryForm = (props) => {
       apiManager.postType("entries", entry).then(() => {
         document.getElementById("attendee_count").value = "";
         document.getElementById("vehicle_number").value = "";
+        if (isChecked === true) {
+          document.getElementById("time").value = "";
+        }
         setEntry({
           attendee_count: "",
           vehicle_number: "",
-          time: moment().format("HH:mm"),
+          time: "",
         });
       });
     }, 100);
     alert("Success!");
-    console.log(entry);
   };
 
   return (
@@ -127,10 +125,11 @@ const EntryForm = (props) => {
               native
               onChange={handleChosenRouteChange}
               fullWidth
+              required
               value={chosenRoute}
             >
               <option aria-label="None" value="">
-                Choose Route
+                All Routes
               </option>
               {routes ? (
                 routes.map((route) => (
@@ -199,7 +198,6 @@ const EntryForm = (props) => {
                 <Checkbox
                   checked={isChecked}
                   onChange={handleIsCheckedChange}
-                  name="checkedA"
                   color="primary"
                 />
               }
@@ -242,7 +240,8 @@ const EntryForm = (props) => {
                   id="time"
                   type="time"
                   fullWidth
-                  value={entry.time}
+                  required
+                  // value={entry.time}
                   onChange={handleEntryChange}
                 />
               </Grid>
@@ -262,3 +261,37 @@ const EntryForm = (props) => {
 };
 
 export default EntryForm;
+
+// <Grid item xs={12} md={3}>
+//             <FormControl style={{ width: 200 }}>
+//               <InputLabel>Route:</InputLabel>
+//               <Select
+//                 id="route_id"
+//                 // native
+//                 onChange={handleChosenRouteChange}
+//                 fullWidth
+//                 value={chosenRoute}
+//               >
+//                 <MenuItem aria-label="None" value="">
+//                   None
+//                 </MenuItem>
+//                 {routes ? (
+//                   routes.map((route) => (
+//                     // <>
+//                     //   {route.name < 10 ? (
+//                     //     <MenuItem key={route.id} value={route.name}>
+//                     //       {route.name.slice(1)} {route.description}
+//                     //     </MenuItem>
+//                     //   ) : (
+//                         <MenuItem key={route.id} value={route.name}>
+//                           {route.name} {route.description}
+//                         </MenuItem>
+//                     //   )}
+//                     // </>
+//                   ))
+//                 ) : (
+//                   <></>
+//                 )}
+//               </Select>
+//             </FormControl>
+//           </Grid>
