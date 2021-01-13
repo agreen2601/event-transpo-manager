@@ -9,19 +9,15 @@ import apiManager from "../api/apiManager";
 
 // "places" and "shuttles" fill the dropdowns, both "handle...change"s change the 3 "chosen"s (route dependent upon location work together)
 const EntryEditForm = (props) => {
-  const places = props.places;
-  const routes = props.routes;
   const shuttles = props.shuttles;
   const dates = props.dates;
-  const chosenPlaceId = props.chosenPlaceId;
-  const chosenRoute = props.chosenRoute;
-  const handleChosenPlaceChange = props.handleChosenPlaceChange;
-  const handleChosenRouteChange = props.handleChosenRouteChange;
   const [entry, setEntry] = useState({
     attendee_count: "",
     vehicle_number: "",
     time: "",
   });
+
+  const [places, setPlaces] = useState([]);
 
   // update state of entry upon form field change
   const handleEntryChange = (e) => {
@@ -37,21 +33,22 @@ const EntryEditForm = (props) => {
       .then((entry) => {
         setEntry(entry);
       });
+      apiManager.getAllType("places").then((r) => {
+        r.sort((a, b) => a.name.localeCompare(b.name));
+        setPlaces(r);
+      });
   }, [props.match.params.entryId]);
 
   const editedEntry = {
     id: parseInt(props.match.params.entryId),
     shuttle_id: entry.shuttle_id,
     date_id: entry.date_id,
+    place_id: entry.place_id,
     user_id: entry.user_id,
     attendee_count: entry.attendee_count,
     vehicle_number: entry.vehicle_number,
     time: entry.time,
   };
-
-  chosenRoute === ""
-    ? (editedEntry.place_id = entry.place_id)
-    : (editedEntry.place_id = chosenPlaceId);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -90,79 +87,32 @@ const EntryEditForm = (props) => {
               </Select>
             </Grid>
             <Grid item xs={12} md={3}>
-              <InputLabel>Route:</InputLabel>
+              <InputLabel>Location:</InputLabel>
               <Select
-                id="route_id"
+                id="place_id"
                 native
-                onChange={handleChosenRouteChange}
+                onChange={handleEntryChange}
                 fullWidth
-                value={chosenRoute}
+                required
+                value={entry.place_id}
               >
-                <option aria-label="None" value="">
-                  Choose Route (not required)
+                <option aria-label="None" value="" data-name="">
+                  Choose Location
                 </option>
-                {routes ? (
-                  routes.map((route) => (
-                    <option key={route.id} value={route.name}>
-                      {route.name} {route.description}
+                {places ? (
+                  places.map((place) => (
+                    <option
+                      key={place.id}
+                      value={parseInt(place.id)}
+                      data-name={place.name}
+                    >
+                      {place.name}
                     </option>
                   ))
                 ) : (
                   <></>
                 )}
               </Select>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <InputLabel>Location:</InputLabel>
-              {chosenRoute === "" ? (
-                <Select
-                  id="place_id"
-                  native
-                  onChange={handleEntryChange}
-                  fullWidth
-                  required
-                  value={entry.place_id}
-                >
-                  <option aria-label="None" value="">
-                    Choose Location
-                  </option>
-                  {places ? (
-                    places.map((place) => (
-                      <option key={place.id} value={parseInt(place.id)}>
-                        {place.name}
-                      </option>
-                    ))
-                  ) : (
-                    <></>
-                  )}
-                </Select>
-              ) : (
-                <Select
-                  id="place_id"
-                  native
-                  onChange={handleChosenPlaceChange}
-                  fullWidth
-                  required
-                  value={chosenPlaceId}
-                >
-                  <option aria-label="None" value="" data-name="">
-                    Choose Location
-                  </option>
-                  {places ? (
-                    places.map((place) => (
-                      <option
-                        key={place.id}
-                        value={parseInt(place.id)}
-                        data-name={place.name}
-                      >
-                        {place.name}
-                      </option>
-                    ))
-                  ) : (
-                    <></>
-                  )}
-                </Select>
-              )}
             </Grid>
             <Grid item xs={12} md={3}>
               <InputLabel>Date:</InputLabel>

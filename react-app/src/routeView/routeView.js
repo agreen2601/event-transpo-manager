@@ -85,6 +85,7 @@ const RouteView = (props) => {
               key={route.id}
               route={route}
               chosenDate={chosenDate}
+              chosenRoute={chosenRoute}
               {...props}
             />
           ))}

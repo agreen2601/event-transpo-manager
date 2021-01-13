@@ -8,12 +8,18 @@ import "../styles.css";
 const RouteCard = (props) => {
   const route = props.route;
   const chosenDate = props.chosenDate;
+  const chosenRoute = props.chosenRoute;
   const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
     apiManager
       .getAssignmentsByDateRoute(parseInt(chosenDate), route.id)
       .then((r) => {
+        r.sort((a, b) => (a.vehicle.number > b.vehicle.number ? -1 : 1))
+          .sort((a, b) =>
+            a.vehicle.number.length > b.vehicle.number.length ? 1 : -1
+          )
+          .sort((c, d) => c.vehicle.company.localeCompare(d.vehicle.company));
         setAssignments(r);
       });
   }, [chosenDate, route.id]);
@@ -47,48 +53,39 @@ const RouteCard = (props) => {
     borderColor: route.color,
   };
 
-  // if (parseInt(route.name) !== "NaN") {
-  //   console.log(typeof route.name);
-  // } else {
-  //   console.log("Non a number", route.name);
-  // }
-
   return (
     <>
       <div className="route_border" style={routeBorder}>
-        <Typography component="h6" className="route_name" style={routeColor}>
-          Route {routeName} {route.description}
-        </Typography>
-        <AddCircleOutlineIcon
-          className="route_icon"
-          onClick={() =>
-            props.history.push(`/assignment/add/${props.route.id}`)
-          }
-          style={{ fontSize: 20 }}
-          value={route.id}
-        />
+        {isNaN(route.name) === true ? (
+          <Typography component="h6" className="route_name" style={routeColor}>
+            {routeName} {route.description}
+          </Typography>
+        ) : (
+          <Typography component="h6" className="route_name" style={routeColor}>
+            Route {routeName} {route.description}
+          </Typography>
+        )}
+        {props.isSupervisor === true || props.isStaff === true ? (
+          <AddCircleOutlineIcon
+            className="route_icon"
+            onClick={() =>
+              props.history.push(`/assignment/add/${props.route.id}`)
+            }
+            style={{ fontSize: 20 }}
+            value={route.id}
+          />
+        ) : null}
         <div>
           {assignments.map((assignment) => (
             <AssignmentCard
               key={assignment.id}
               assignment={assignment}
+              chosenRoute={chosenRoute}
               removeAssignment={removeAssignment}
               {...props}
             />
           ))}
         </div>
-        {/* <div className="route_heading">
-          {favoriteRouteIDs.length !== 0 ? (
-            <span className="route_icon" id-="unStar" onClick={unStar}>
-              unstar
-            </span>
-          ) : null}
-          {favoriteRouteIDs.length === 0 ? (
-            <span className="route_icon" id="star" onClick={star}>
-              star
-            </span>
-          ) : null}
-        </div> */}
       </div>
     </>
   );

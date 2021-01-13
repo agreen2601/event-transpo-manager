@@ -41,8 +41,9 @@ const VehicleForm = (props) => {
           vehicleA.number === vehicle.number
       );
       if (vehicleA === undefined) {
-        apiManager.postType("vehicles", vehicle);
-        // .then((result) => props.setVehicleId(result.id));
+        apiManager
+          .postType("vehicles", vehicle)
+          .then((result) => props.setVehicleId(result.id));
       } else {
         alert("Vehicle already in database.");
       }

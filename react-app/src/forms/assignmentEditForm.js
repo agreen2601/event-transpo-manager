@@ -29,11 +29,11 @@ const AssignmentEditForm = (props) => {
 
   const getAllDropDowns = () => {
     return (
-      apiManager.getType("routes").then((r) => {
+      apiManager.getAllType("routes").then((r) => {
         r.sort((a, b) => (a.name > b.name ? 1 : -1));
         setRoutes(r);
       }),
-      apiManager.getType("vehicles").then((r) => {
+      apiManager.getAllType("vehicles").then((r) => {
         r.sort((a, b) => (a.number > b.number ? 1 : -1)).sort((a, b) =>
           a.company.localeCompare(b.company)
         );

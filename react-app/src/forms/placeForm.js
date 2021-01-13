@@ -8,6 +8,7 @@ import Select from "@material-ui/core/Select";
 import apiManager from "../api/apiManager";
 
 const PlaceForm = (props) => {
+  const getPlaces = props.getPlaces;
   const routes = props.routes;
   const [place, setPlace] = useState({
     name: "",
@@ -37,6 +38,7 @@ const PlaceForm = (props) => {
       setPlace({
         name: "",
       });
+      getPlaces();
     });
     alert("Success!");
   };

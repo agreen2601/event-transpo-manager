@@ -47,13 +47,18 @@ const DriverList = (props) => {
         each2.vehicle.company.toLowerCase().includes(searchField) ||
         each2.vehicle.number.includes(searchField)
     )
-    .sort((a, b) => a.vehicle.number.localeCompare(b.vehicle.number))
+    .sort((a, b) => a.route.name.localeCompare(b.route.name))
     .sort((a, b) => a.vehicle.company.localeCompare(b.vehicle.company))
     .sort((a, b) => a.date.date.localeCompare(b.date.date));
 
   useEffect(() => {
     getAssignments();
   }, []);
+
+  let totalDriverCount = 0;
+  if (filteredAssignments.length !== 0) {
+    totalDriverCount = filteredAssignments.length;
+  }
 
   return (
     <>
@@ -122,21 +127,26 @@ const DriverList = (props) => {
           </Grid>
         </Grid>
       </div>
+      <Typography variant="h6">{totalDriverCount} drivers</Typography>
       <TableContainer>
         <Table size="small">
           <TableHead>
             <TableRow>
-              {chosenDateId === "" ? <TableCell>Date</TableCell> : null}
-              <TableCell>
+              {chosenDateId === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Date</TableCell>
+              ) : null}
+              <TableCell style={{ fontWeight: 600 }}>
                 Name<div>Number</div>
               </TableCell>
-              <TableCell>
-                Company<div>Veh Number</div>
+              <TableCell style={{ fontWeight: 600 }}>
+                Company<div>Vehicle #</div>
               </TableCell>
-              {chosenRoute === "" ? <TableCell>Route</TableCell> : null}
-              <TableCell>Local</TableCell>
-              <TableCell>Notes</TableCell>
-              <TableCell>Edit</TableCell>
+              {chosenRoute === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Route</TableCell>
+              ) : null}
+              <TableCell style={{ fontWeight: 600 }}>Local</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Notes</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -154,7 +164,13 @@ const DriverList = (props) => {
                   <div>{assignment.vehicle.number}</div>
                 </TableCell>
                 {chosenRoute === "" ? (
-                  <TableCell>{assignment.route.name}</TableCell>
+                  <>
+                    {parseInt(assignment.route.name) < 10 ? (
+                      <TableCell>{assignment.route.name.slice(1)}</TableCell>
+                    ) : (
+                      <TableCell>{assignment.route.name}</TableCell>
+                    )}
+                  </>
                 ) : null}
                 {assignment.driver.isLocal === true ? (
                   <TableCell className="is_local">Local</TableCell>

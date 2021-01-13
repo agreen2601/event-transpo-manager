@@ -19,7 +19,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         fields = ('id', 'first_name', 'last_name', "last_login",
-                  "username", "email", "date_joined",)
+                  "username", "email", "date_joined", "is_staff", "is_superuser")
 
 
 class Users(ViewSet):
@@ -56,6 +56,8 @@ class Users(ViewSet):
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
         user.email = request.data["email"]
+        user.is_staff = request.data["is_staff"]
+        user.is_superuser = request.data["is_superuser"]
         user.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -76,6 +78,7 @@ def get_user(request):
             "email": user.email,
             "username": user.username,
             "is_staff": user.is_staff,
+            "is_superuser": user.is_superuser,
             "token": token
         }
         return HttpResponse(json.dumps(userdict), content_type='application/json')

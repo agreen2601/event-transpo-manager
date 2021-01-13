@@ -6,7 +6,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Typography from "@material-ui/core/Typography";
 import apiManager from "../api/apiManager";
 
-const DateForm = () => {
+const DateForm = (props) => {
+  const getDates = props.getDates;
   const [date, setDate] = useState({ date: "" });
 
   const handleDateChange = (event) => {
@@ -15,9 +16,17 @@ const DateForm = () => {
     setDate(stateToChange);
   };
 
-  const handleSubmit = () => {
-    apiManager.addType("dates", date);
-    // .then(() => props.history.push(`/route/view`));
+  // post date, reset input to empty "", provide user "success" alert
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    apiManager.postType("dates", date).then(() => {
+      document.getElementById("date").value = "";
+      setDate({
+        date: "",
+      });
+      getDates();
+    });
+    alert("Success!");
   };
 
   return (

@@ -31,9 +31,9 @@ const VehicleEditForm = (props) => {
       });
   }, [props.match.params.vehicleId]);
 
-  const handleVehicleChange = (event) => {
+  const handleVehicleChange = (e) => {
     const stateToChange = { ...vehicle };
-    stateToChange[event.target.id] = event.target.value;
+    stateToChange[e.target.id] = e.target.value;
     setVehicle(stateToChange);
   };
 

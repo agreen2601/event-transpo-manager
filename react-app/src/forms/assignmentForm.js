@@ -9,15 +9,17 @@ import apiManager from "../api/apiManager";
 import moment from "moment";
 
 const AssignmentForm = (props) => {
-  const chosenRoute = props.chosenRoute;
-  const handleChosenRouteChange = props.handleChosenRouteChange;
+  const chosenDate = props.chosenDate
+  const handleChosenDateChange = props.handleChosenDateChange
   const [assignment, setAssignment] = useState({
     start_time: moment().format("HH:mm"),
     end_time: "23:59",
-    vehicle_id: "",
-    driver_id: "",
-    date_id: "",
+    vehicle_id: props.vehicleId,
+    driver_id: props.driverId,
+    route_id: "",
   });
+
+  assignment.date_id = chosenDate;
 
   const [dates, setDates] = useState([]);
   const [routes, setRoutes] = useState([]);
@@ -59,7 +61,6 @@ const AssignmentForm = (props) => {
 
   // get all drivers, check if driver already in system, post if not, send to route view
   const handleSubmit = (e) => {
-    assignment.route_id = chosenRoute;
     e.preventDefault();
     apiManager
       .getAssignmentsByDateDriver(assignment.date_id, assignment.driver_id)
@@ -89,7 +90,7 @@ const AssignmentForm = (props) => {
               onChange={handleAssignmentChange}
               fullWidth
               required
-              // value="driver_id"
+              value={assignment.driver_id}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Driver
@@ -113,7 +114,7 @@ const AssignmentForm = (props) => {
               onChange={handleAssignmentChange}
               fullWidth
               required
-              // value="vehicle_id"
+              value={assignment.vehicle_id}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Vehicle
@@ -134,10 +135,10 @@ const AssignmentForm = (props) => {
             <Select
               id="route_id"
               native
-              onChange={handleChosenRouteChange}
+              onChange={handleAssignmentChange}
               fullWidth
               required
-              value={chosenRoute}
+              // value={chosenRoute}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Route
@@ -158,10 +159,10 @@ const AssignmentForm = (props) => {
             <Select
               id="date_id"
               native
-              onChange={handleAssignmentChange}
+              onChange={handleChosenDateChange}
               fullWidth
               required
-              // value="date_id"
+              value={chosenDate}
             >
               <option aria-label="None" value="" data-name="">
                 Choose Date

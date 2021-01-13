@@ -37,8 +37,9 @@ const DriverForm = (props) => {
         (driverA) => driverA.name === driver.name
       );
       if (driverA === undefined) {
-        apiManager.postType("drivers", driver);
-        // .then((result) => props.setDriverId(result.id));
+        apiManager
+          .postType("drivers", driver)
+          .then((result) => props.setDriverId(result.id));
         props.history.push(`/vehicle/form`);
       } else {
         alert("Driver already in database.");

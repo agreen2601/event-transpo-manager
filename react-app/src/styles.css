@@ -85,5 +85,33 @@ body {
 
 .table_rows:hover {
   box-shadow: 0 8px 16px 0 black;
-  color: red;
+}
+
+/* Route Graphs */
+.graph {
+  margin: 20px 0 40px 0;
+}
+
+.graph_border {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.places_graph {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.places_graph_border {
+  min-width: 320px;
+  flex: 1 0 0;
+  border: solid;
+  border-width: 1px;
+  /* margin: -2px;
+  padding: 2px; */
+}
+
+.places_graph_border:hover {
+  box-shadow: 0 8px 16px 0 black;
+  background-color: rgba(250, 250, 250);
 }

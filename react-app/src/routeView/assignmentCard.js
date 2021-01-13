@@ -6,6 +6,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 
 const AssignmentCard = (props) => {
   const assignment = props.assignment;
+  const chosenRoute = props.chosenRoute;
   const removeAssignment = props.removeAssignment;
 
   const localStyle = {
@@ -22,20 +23,24 @@ const AssignmentCard = (props) => {
       {assignment.driver.isLocal === true ? (
         <span style={localStyle}>L</span>
       ) : null}
-      <RemoveCircleOutlineIcon
-        className="assignment_icon"
-        onClick={() => removeAssignment(assignment.id)}
-        style={{ fontSize: 20 }}
-      />
-      <FaExchangeAlt
-        className="assignment_icon"
-        onClick={() =>
-          props.history.push(
-            `/assignment/edit/${assignment.id}/${props.route.id}/${assignment.driver_id}/${assignment.vehicle_id}`
-          )
-        }
-        style={{ fontSize: 17 }}
-      />
+      {props.isSupervisor === true || props.isStaff === true ? (
+        <>
+          <RemoveCircleOutlineIcon
+            className="assignment_icon"
+            onClick={() => removeAssignment(assignment.id)}
+            style={{ fontSize: 20 }}
+          />
+          <FaExchangeAlt
+            className="assignment_icon"
+            onClick={() =>
+              props.history.push(
+                `/assignment/edit/${assignment.id}/${props.route.id}/${assignment.driver_id}/${assignment.vehicle_id}`
+              )
+            }
+            style={{ fontSize: 17 }}
+          />
+        </>
+      ) : null}
       <FaRegEdit
         className="assignment_icon"
         onClick={() =>
@@ -56,6 +61,17 @@ const AssignmentCard = (props) => {
           <FaWheelchair style={{ color: "red" }} />
         ) : null}
       </div>
+      {chosenRoute === "" ? (
+        <></>
+      ) : (
+        <>
+          <span>
+            {assignment.start_time.slice(0, -3)} -{" "}
+            {assignment.end_time.slice(0, -3)}
+          </span>
+          <div>{assignment.driver.notes}</div>
+        </>
+      )}
     </div>
   );
 };

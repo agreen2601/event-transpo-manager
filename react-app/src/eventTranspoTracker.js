@@ -8,10 +8,12 @@ import Log from "./reports/log";
 
 const EventTranspoTracker = (props) => {
   const hasUser = props.hasUser;
+  const isSupervisor = props.isSupervisor;
   const dates = props.dates;
   const shuttles = props.shuttles;
   const routes = props.routes;
   const places = props.places;
+  // const vehicles = props.vehicles;
   const entries = props.entries;
   const chosenDateId = props.chosenDateId;
   const chosenDateName = props.chosenDateName;
@@ -20,11 +22,14 @@ const EventTranspoTracker = (props) => {
   const chosenRoute = props.chosenRoute;
   const chosenPlaceId = props.chosenPlaceId;
   const chosenPlaceName = props.chosenPlaceName;
+  // const chosenVehicle = props.chosenVehicle;
   const getEntries = props.getEntries;
   const handleChosenPlaceChange = props.handleChosenPlaceChange;
   const handleChosenRouteChange = props.handleChosenRouteChange;
   const handleChosenShuttleChange = props.handleChosenShuttleChange;
   const handleChosenDateChange = props.handleChosenDateChange;
+  // const handleChosenVehicleChange = props.handleChosenVehicleChange
+
 
   return (
     <span>
@@ -39,14 +44,17 @@ const EventTranspoTracker = (props) => {
               routes={routes}
               shuttles={shuttles}
               dates={dates}
+              // vehicles={vehicles}
               chosenPlaceId={chosenPlaceId}
               chosenRoute={chosenRoute}
               chosenShuttleId={chosenShuttleId}
               chosenDateId={chosenDateId}
+              // chosenVehicle={chosenVehicle}
               handleChosenPlaceChange={handleChosenPlaceChange}
               handleChosenRouteChange={handleChosenRouteChange}
               handleChosenShuttleChange={handleChosenShuttleChange}
               handleChosenDateChange={handleChosenDateChange}
+              // handleChosenVehicleChange={handleChosenVehicleChange}
               {...props}
             />
           ) : (
@@ -81,6 +89,7 @@ const EventTranspoTracker = (props) => {
         render={(props) =>
           hasUser ? (
             <Log
+              isSupervisor={isSupervisor}
               getEntries={getEntries}
               dates={dates}
               shuttles={shuttles}

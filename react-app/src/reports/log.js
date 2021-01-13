@@ -68,7 +68,7 @@ const Log = (props) => {
       "Are you sure you want to delete this entry? Deletion cannot be undone."
     );
     if (check === true) {
-      apiManager.deleteEntry(id).then(() => {
+      apiManager.deleteTypeWithId("entries", id).then(() => {
         getEntries();
       });
     }
@@ -82,11 +82,6 @@ const Log = (props) => {
     fontSize: 20,
     paddingBottom: 2,
   };
-
-  //   let routeName = "";
-  // parseInt(route.name) < 10
-  //   ? (routeName = route.name.slice(1))
-  //   : (routeName = route.name);
 
   return (
     <>
@@ -212,21 +207,29 @@ const Log = (props) => {
         </Grid>
       </div>
       <Typography variant="h6">
-        {totalAttendeeCount} attendees moved in {filteredEntries.length} trips.
+        {totalAttendeeCount} attendees moved in {filteredEntries.length} trips
       </Typography>
       <TableContainer>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Time</TableCell>
-              <TableCell>Vehicle #</TableCell>
-              <TableCell>Pax</TableCell>
-              {chosenDateId === "" ? <TableCell>Date</TableCell> : null}
-              {chosenShuttleId === "" ? <TableCell>Shuttle</TableCell> : null}
-              {chosenRoute === "" ? <TableCell>Rt</TableCell> : null}
-              {chosenPlaceId === "" ? <TableCell>Location</TableCell> : null}
-              <TableCell>Entered By</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Time</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Vehicle #</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Pax</TableCell>
+              {chosenDateId === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Date</TableCell>
+              ) : null}
+              {chosenShuttleId === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Shuttle</TableCell>
+              ) : null}
+              {chosenRoute === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Rt</TableCell>
+              ) : null}
+              {chosenPlaceId === "" ? (
+                <TableCell style={{ fontWeight: 600 }}>Location</TableCell>
+              ) : null}
+              <TableCell style={{ fontWeight: 600 }}>Entered By</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -254,7 +257,13 @@ const Log = (props) => {
                   <TableCell>{entry.shuttle.name}</TableCell>
                 ) : null}
                 {chosenRoute === "" ? (
-                  <TableCell>{entry.place.route.name}</TableCell>
+                  <>
+                    {parseInt(entry.place.route.name) < 10 ? (
+                      <TableCell>{entry.place.route.name.slice(1)}</TableCell>
+                    ) : (
+                      <TableCell>{entry.place.route.name}</TableCell>
+                    )}
+                  </>
                 ) : null}
                 {chosenPlaceId === "" ? (
                   <TableCell>{entry.place.name}</TableCell>
@@ -263,8 +272,9 @@ const Log = (props) => {
                   {entry.user.first_name} {entry.user.last_name}
                 </TableCell>
                 <TableCell>
-                  {parseInt(window.sessionStorage.getItem("userID")) ===
-                  entry.user_id ? (
+                  {props.isSupervisor === true ||
+                  parseInt(window.sessionStorage.getItem("userID")) ===
+                    entry.user_id ? (
                     <>
                       <span className="action-icon">
                         <FaRegEdit

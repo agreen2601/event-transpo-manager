@@ -11,6 +11,17 @@ import "./styles.css";
 const AppViews = (props) => {
   const isAuthenticated = () => sessionStorage.getItem("token") !== null;
   const [hasUser, setHasUser] = useState(isAuthenticated());
+  const [isSupervisor, setIsSupervisor] = useState(Boolean);
+  const [isStaff, setIsStaff] = useState(Boolean);
+
+  const findSupervisor = () => {
+    apiManager
+      .getSingleType("users", sessionStorage.getItem("userID"))
+      .then((r) => {
+        setIsSupervisor(r.is_superuser);
+        setIsStaff(r.is_staff);
+      });
+  };
 
   const setUserToken = (resp) => {
     sessionStorage.setItem("token", resp.token);
@@ -21,11 +32,14 @@ const AppViews = (props) => {
   const clearUser = () => {
     sessionStorage.clear();
     setHasUser(isAuthenticated());
+    setIsSupervisor(false);
+    setIsStaff(false);
   };
 
-  const [mode, setMode] = useState(true);
+  const [mode, setMode] = useState(false);
   const handleModeChange = () => {
     setMode(!mode);
+    findSupervisor();
   };
 
   // places routes and shuttles fill the dropdown menus
@@ -35,6 +49,7 @@ const AppViews = (props) => {
   const [shuttles, setShuttles] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [places, setPlaces] = useState([]);
+  // const [assignments, setAssignments] = useState([]);
   const [entries, setEntries] = useState([]);
   const [chosenDateId, setChosenDateId] = useState("");
   const [chosenDateName, setChosenDateName] = useState("");
@@ -43,28 +58,43 @@ const AppViews = (props) => {
   const [chosenRoute, setChosenRoute] = useState("");
   const [chosenPlaceId, setChosenPlaceId] = useState("");
   const [chosenPlaceName, setChosenPlaceName] = useState("");
+  // const [chosenVehicle, setChosenVehicle] = useState("");
 
   // get and sort all dropdowns
-  const getAllDropDowns = () => {
-    return (
-      apiManager.getAllType("dates").then((r) => {
-        r.sort((a, b) => a.date.localeCompare(b.date));
-        setDates(r);
-      }),
-      apiManager.getAllType("shuttles").then((r) => {
-        r.sort((a, b) => a.name.localeCompare(b.name));
-        setShuttles(r);
-      }),
-      apiManager.getAllType("routes").then((r) => {
-        r.sort((a, b) => a.name.localeCompare(b.name));
-        setRoutes(r);
-      }),
-      apiManager.getAllType("places").then((r) => {
-        r.sort((a, b) => a.name.localeCompare(b.name));
-        setPlaces(r);
-      })
-    );
+  const getDates = () => {
+    apiManager.getAllType("dates").then((r) => {
+      r.sort((a, b) => a.date.localeCompare(b.date));
+      setDates(r);
+    });
   };
+
+  const getShuttles = () => {
+    apiManager.getAllType("shuttles").then((r) => {
+      r.sort((a, b) => a.name.localeCompare(b.name));
+      setShuttles(r);
+    });
+  };
+
+  const getRoutes = () => {
+    apiManager.getAllType("routes").then((r) => {
+      r.sort((a, b) => a.name.localeCompare(b.name));
+      setRoutes(r);
+    });
+  };
+
+  const getPlaces = () => {
+    apiManager.getAllType("places").then((r) => {
+      r.sort((a, b) => a.name.localeCompare(b.name));
+      setPlaces(r);
+    });
+  };
+
+  // const getAssignments = () => {
+  //   apiManager.getAllType("assignments").then((r) => {
+  //     r.sort((a, b) => a.vehicle.number.localeCompare(b.vehicle.number));
+  //     setAssignments(r);
+  //   });
+  // };
 
   const getEntries = () => {
     apiManager.getAllType("entries").then((r) => {
@@ -104,6 +134,13 @@ const AppViews = (props) => {
     });
   };
 
+  // setChosenVehicle("");
+  // apiManager.getAllType("assigments").then((r) => {
+  //   setAssignments(
+  //     r.sort((a, b) => a.vehicle.number.localeCompare(b.vehicle.number))
+  //   );
+  // });
+
   // set chosenShuttleId based on choice from dropdown menu
   const handleChosenShuttleChange = (e) => {
     setChosenShuttleId(e.target.value);
@@ -116,8 +153,16 @@ const AppViews = (props) => {
     setChosenDateName(e.target.options[e.target.selectedIndex].dataset.name);
   };
 
+  // const handleChosenVehicleChange = (e) => {
+  //   setChosenVehicle(e.target.value);
+  // };
+
   useEffect(() => {
-    getAllDropDowns();
+    getDates();
+    getShuttles();
+    getRoutes();
+    getPlaces();
+    // getVehicles();
   }, []);
 
   return (
@@ -128,6 +173,8 @@ const AppViews = (props) => {
             <NavBar
               hasUser={hasUser}
               clearUser={clearUser}
+              isSupervisor={isSupervisor}
+              isStaff={isStaff}
               mode={mode}
               handleModeChange={handleModeChange}
               {...props}
@@ -136,10 +183,12 @@ const AppViews = (props) => {
               {mode === false ? (
                 <EventTranspoTracker
                   hasUser={hasUser}
+                  isSupervisor={isSupervisor}
                   dates={dates}
                   shuttles={shuttles}
                   routes={routes}
                   places={places}
+                  // vehicles={vehicles}
                   entries={entries}
                   chosenDateId={chosenDateId}
                   chosenDateName={chosenDateName}
@@ -148,16 +197,20 @@ const AppViews = (props) => {
                   chosenRoute={chosenRoute}
                   chosenPlaceId={chosenPlaceId}
                   chosenPlaceName={chosenPlaceName}
+                  // chosenVehicle={chosenVehicle}
                   getEntries={getEntries}
                   handleChosenPlaceChange={handleChosenPlaceChange}
                   handleChosenRouteChange={handleChosenRouteChange}
                   handleChosenShuttleChange={handleChosenShuttleChange}
                   handleChosenDateChange={handleChosenDateChange}
+                  // handleChosenVehicleChange={handleChosenVehicleChange}
                   {...props}
                 />
               ) : (
                 <EventTranspoManager
                   hasUser={hasUser}
+                  isSupervisor={isSupervisor}
+                  isStaff={isStaff}
                   dates={dates}
                   routes={routes}
                   chosenDateId={chosenDateId}
@@ -165,6 +218,10 @@ const AppViews = (props) => {
                   chosenRoute={chosenRoute}
                   handleChosenRouteChange={handleChosenRouteChange}
                   handleChosenDateChange={handleChosenDateChange}
+                  getDates={getDates}
+                  getShuttles={getShuttles}
+                  getRoutes={getRoutes}
+                  getPlaces={getPlaces}
                   {...props}
                 />
               )}
@@ -177,7 +234,11 @@ const AppViews = (props) => {
               exact
               path="/login"
               render={(props) => (
-                <Login setUserToken={setUserToken} {...props} />
+                <Login
+                  setUserToken={setUserToken}
+                  findSupervisor={findSupervisor}
+                  {...props}
+                />
               )}
             />
             <Route

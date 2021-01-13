@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import DateForm from "./forms/dateForm";
 import ShuttleForm from "./forms/shuttleForm";
@@ -11,12 +11,16 @@ import VehicleEditForm from "./forms/vehicleEditForm";
 import AssignmentForm from "./forms/assignmentForm";
 import AssignmentAddForm from "./forms/assignmentAddForm";
 import AssignmentEditForm from "./forms/assignmentEditForm";
+import StaffEditForm from "./forms/editStaffForm";
+import StaffList from "./drivers/staffList";
 import RouteView from "./routeView/routeView";
 import DriverList from "./drivers/driverList";
 import "./styles.css";
 
 const EventTranspoManager = (props) => {
   const hasUser = props.hasUser;
+  const isSupervisor = props.isSupervisor;
+  const isStaff = props.isStaff;
   const dates = props.dates;
   const routes = props.routes;
   const chosenDateId = props.chosenDateId;
@@ -24,6 +28,12 @@ const EventTranspoManager = (props) => {
   const chosenRoute = props.chosenRoute;
   const handleChosenRouteChange = props.handleChosenRouteChange;
   const handleChosenDateChange = props.handleChosenDateChange;
+  const getDates = props.getDates;
+  const getShuttles = props.getShuttles;
+  const getRoutes = props.getRoutes;
+  const getPlaces = props.getPlaces;
+  const [driverId, setDriverId] = useState(1);
+  const [vehicleId, setVehicleId] = useState(1);
 
   return (
     <>
@@ -31,24 +41,42 @@ const EventTranspoManager = (props) => {
       <Route
         exact
         path="/date/form"
-        render={() => (hasUser ? <DateForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <DateForm getDates={getDates} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/shuttle/form"
-        render={() => (hasUser ? <ShuttleForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <ShuttleForm getShuttles={getShuttles} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/route/form"
-        render={() => (hasUser ? <RouteForm /> : <Redirect to="/login" />)}
+        render={() =>
+          hasUser ? (
+            <RouteForm getRoutes={getRoutes} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
       />
       <Route
         exact
         path="/location/form"
         render={() =>
           hasUser ? (
-            <PlaceForm routes={routes} {...props} />
+            <PlaceForm routes={routes} getPlaces={getPlaces} {...props} />
           ) : (
             <Redirect to="/login" />
           )
@@ -58,7 +86,11 @@ const EventTranspoManager = (props) => {
         exact
         path="/driver/form"
         render={(props) =>
-          hasUser ? <DriverForm {...props} /> : <Redirect to="/login" />
+          hasUser ? (
+            <DriverForm setDriverId={setDriverId} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
         }
       />
       <Route
@@ -72,7 +104,11 @@ const EventTranspoManager = (props) => {
         exact
         path="/vehicle/form"
         render={(props) =>
-          hasUser ? <VehicleForm {...props} /> : <Redirect to="/login" />
+          hasUser ? (
+            <VehicleForm setVehicleId={setVehicleId} {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
         }
       />
       <Route
@@ -88,8 +124,10 @@ const EventTranspoManager = (props) => {
         render={(props) =>
           hasUser ? (
             <AssignmentForm
-              chosenRoute={chosenRoute}
-              handleChosenRouteChange={handleChosenRouteChange}
+              chosenDate={chosenDateId}
+              handleChosenDateChange={handleChosenDateChange}
+              driverId={driverId}
+              vehicleId={vehicleId}
               {...props}
             />
           ) : (
@@ -121,10 +159,19 @@ const EventTranspoManager = (props) => {
       />
       <Route
         exact
+        path="/staff/edit/:userId(\d+)"
+        render={(props) =>
+          hasUser ? <StaffEditForm {...props} /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        exact
         path="/route/view"
         render={(props) =>
           hasUser ? (
             <RouteView
+              isStaff={isStaff}
+              isSupervisor={isSupervisor}
               dates={dates}
               routes={routes}
               chosenDate={chosenDateId}
@@ -158,17 +205,21 @@ const EventTranspoManager = (props) => {
           )
         }
       />
-      {/* <Route
+      <Route
         exact
-        path="/driver/search"
+        path="/staff/list"
         render={(props) =>
           hasUser ? (
-            <DriverSearch searchField={submittedSearchField} {...props} />
+            <StaffList
+              isStaff={isStaff}
+              isSupervisor={isSupervisor}
+              {...props}
+            />
           ) : (
             <Redirect to="/login" />
           )
         }
-      /> */}
+      />
     </>
   );
 };

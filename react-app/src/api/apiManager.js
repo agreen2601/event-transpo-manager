@@ -42,8 +42,8 @@ export default {
       body: JSON.stringify(obj),
     });
   },
-  deleteEntry(id) {
-    return fetch(`${baseurl}/entries/${id}`, {
+  deleteTypeWithId(type, id) {
+    return fetch(`${baseurl}/${type}/${id}`, {
       method: "DELETE",
     });
   },
@@ -64,25 +64,5 @@ export default {
       },
       body: JSON.stringify(userToLogin),
     }).then((result) => result.json());
-  },
-
-  // manager
-  // getAssignmentByDateRouteDriver(dateId, routeId, driverId) {
-  //   return fetch(
-  //     `${baseurl}/assignments/?dateId=${dateId}&routeId=${routeId}&driverId=${driverId}&_expand=driver&_expand=vehicle`
-  //   ).then((result) => result.json());
-  // },
-  getUsers() {
-    return fetch(`${baseurl}/users`).then((result) => result.json());
-  },
-  getFavorites(userId) {
-    return fetch(
-      `${baseurl}/favoriteRoutes?userId=${userId}&_expand=route`
-    ).then((result) => result.json());
-  },
-  deleteTypeWithId(type, id) {
-    return fetch(`${baseurl}/${type}/${id}`, {
-      method: "DELETE",
-    }).then((result) => result.json);
   },
 };
