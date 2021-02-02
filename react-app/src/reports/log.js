@@ -12,6 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { FaRegEdit } from "react-icons/fa";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import apiManager from "../api/apiManager";
 
 const Log = (props) => {
@@ -56,6 +57,32 @@ const Log = (props) => {
     .sort((f, g) => f.time.localeCompare(g.time))
     .sort((h, i) => h.date.date.localeCompare(i.date.date));
 
+  const [sortField, setSortField] = useState(null);
+
+  if (sortField === "time") {
+    filteredEntries.sort((a, b) => a.time.localeCompare(b.time));
+  } else if (sortField === "vehicle") {
+    filteredEntries.sort((a, b) =>
+      a.vehicle_number.localeCompare(b.vehicle_number)
+    );
+  } else if (sortField === "date") {
+    filteredEntries.sort((a, b) => a.date.date.localeCompare(b.date.date));
+  } else if (sortField === "shuttle") {
+    filteredEntries.sort((a, b) =>
+      a.shuttle.name.localeCompare(b.shuttle.name)
+    );
+  } else if (sortField === "route") {
+    filteredEntries.sort((a, b) =>
+      a.place.route.name.localeCompare(b.place.route.name)
+    );
+  } else if (sortField === "location") {
+    filteredEntries.sort((a, b) => a.place.name.localeCompare(b.place.name));
+  } else if (sortField === "user") {
+    filteredEntries.sort((a, b) =>
+      a.user.first_name.localeCompare(b.user.first_name)
+    );
+  }
+
   let totalAttendeeCount = 0;
   if (filteredEntries.length !== 0) {
     totalAttendeeCount = filteredEntries
@@ -82,6 +109,8 @@ const Log = (props) => {
     fontSize: 20,
     paddingBottom: 2,
   };
+
+  const [arrow, setArrow] = useState(null);
 
   return (
     <>
@@ -213,22 +242,71 @@ const Log = (props) => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: 600 }}>Time</TableCell>
-              <TableCell style={{ fontWeight: 600 }}>Vehicle #</TableCell>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("time")}
+                onMouseEnter={() => setArrow("time")}
+                onMouseLeave={() => setArrow("")}
+              >
+                Time {arrow === "time" ? <ArrowDropDownIcon /> : null}
+              </TableCell>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("vehicle")}
+                onMouseEnter={() => setArrow("vehicle")}
+                onMouseLeave={() => setArrow("")}
+              >
+                Vehicle # {arrow === "vehicle" ? <ArrowDropDownIcon /> : null}
+              </TableCell>
               <TableCell style={{ fontWeight: 600 }}>Pax</TableCell>
               {chosenDateId === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Date</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("date")}
+                  onMouseEnter={() => setArrow("date")}
+                  onMouseLeave={() => setArrow("")}
+                >
+                  Date {arrow === "date" ? <ArrowDropDownIcon /> : null}
+                </TableCell>
               ) : null}
               {chosenShuttleId === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Shuttle</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("shuttle")}
+                  onMouseEnter={() => setArrow("shuttle")}
+                  onMouseLeave={() => setArrow("")}
+                >
+                  Shuttle {arrow === "shuttle" ? <ArrowDropDownIcon /> : null}
+                </TableCell>
               ) : null}
               {chosenRoute === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Rt</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("route")}
+                  onMouseEnter={() => setArrow("route")}
+                  onMouseLeave={() => setArrow("")}
+                >
+                  Rt {arrow === "route" ? <ArrowDropDownIcon /> : null}
+                </TableCell>
               ) : null}
               {chosenPlaceId === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Location</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("location")}
+                  onMouseEnter={() => setArrow("location")}
+                  onMouseLeave={() => setArrow("")}
+                >
+                  Location {arrow === "location" ? <ArrowDropDownIcon /> : null}
+                </TableCell>
               ) : null}
-              <TableCell style={{ fontWeight: 600 }}>Entered By</TableCell>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("user")}
+                onMouseEnter={() => setArrow("user")}
+                onMouseLeave={() => setArrow("")}
+              >
+                Entered By {arrow === "user" ? <ArrowDropDownIcon /> : null}
+              </TableCell>
               <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
