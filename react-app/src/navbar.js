@@ -34,11 +34,11 @@ const NavBar = (props) => {
           <Link to="/" style={{ textDecoration: "none" }}>
             {mode === false ? (
               <span className="nav-header" onClick={handleModeChange}>
-                Event Transpo Tracker
+                Switch to Manager
               </span>
             ) : (
               <span className="nav-header" onClick={handleModeChange}>
-                Event Transpo Manager
+                Switch to Tracker
               </span>
             )}
           </Link>

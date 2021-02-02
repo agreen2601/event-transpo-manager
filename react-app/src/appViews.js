@@ -34,6 +34,7 @@ const AppViews = (props) => {
     setHasUser(isAuthenticated());
     setIsSupervisor(false);
     setIsStaff(false);
+    setChosenRoute("");
   };
 
   const [mode, setMode] = useState(false);
