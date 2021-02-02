@@ -22,11 +22,11 @@ const DriverList = (props) => {
   const handleChosenDateChange = props.handleChosenDateChange;
   const handleChosenRouteChange = props.handleChosenRouteChange;
 
-  const [assignments, setAssignments] = useState([]);
+  let [assignments, setAssignments] = useState([]);
 
   const getAssignments = () => {
     apiManager.getAllType("assignments").then((r) => {
-      r.sort((a, b) => a.driver.name.localeCompare(b.driver.name));
+      // r.sort((a, b) => a.driver.name.localeCompare(b.driver.name));
       setAssignments(r);
     });
   };
@@ -37,7 +37,9 @@ const DriverList = (props) => {
     setSearchField(e.target.value.toLowerCase());
   };
 
-  const filteredAssignments = assignments
+  const [sortField, setSortField] = useState(null);
+
+  let filteredAssignments = assignments
     .filter((each) => each.route.name.includes(chosenRoute))
     .filter((each1) => each1.date.date.includes(chosenDateName))
     .filter(
@@ -50,6 +52,23 @@ const DriverList = (props) => {
     .sort((a, b) => a.route.name.localeCompare(b.route.name))
     .sort((a, b) => a.vehicle.company.localeCompare(b.vehicle.company))
     .sort((a, b) => a.date.date.localeCompare(b.date.date));
+
+  if (sortField === "date") {
+    filteredAssignments.sort((a, b) =>
+      a.date.date.localeCompare(b.date.date));
+  } else if (sortField === "driver") {
+    filteredAssignments.sort((a, b) =>
+      a.driver.name.localeCompare(b.driver.name)
+    );
+  } else if (sortField === "company") {
+    filteredAssignments.sort((a, b) =>
+      a.vehicle.company.localeCompare(b.vehicle.company)
+    );
+  } else if (sortField === "route") {
+    filteredAssignments.sort((a, b) =>
+      a.route.name.localeCompare(b.route.name)
+    );
+  }
 
   useEffect(() => {
     getAssignments();
@@ -133,16 +152,33 @@ const DriverList = (props) => {
           <TableHead>
             <TableRow>
               {chosenDateId === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Date</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("date")}
+                >
+                  Date
+                </TableCell>
               ) : null}
-              <TableCell style={{ fontWeight: 600 }}>
-                Name<div>Number</div>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("driver")}
+              >
+                Name
+                <div>Number</div>
               </TableCell>
-              <TableCell style={{ fontWeight: 600 }}>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("company")}
+              >
                 Company<div>Vehicle #</div>
               </TableCell>
               {chosenRoute === "" ? (
-                <TableCell style={{ fontWeight: 600 }}>Route</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600 }}
+                  onClick={() => setSortField("route")}
+                >
+                  Route
+                </TableCell>
               ) : null}
               <TableCell style={{ fontWeight: 600 }}>Local</TableCell>
               <TableCell style={{ fontWeight: 600 }}>Notes</TableCell>
