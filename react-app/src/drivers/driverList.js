@@ -10,6 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { FaRegEdit } from "react-icons/fa";
 import apiManager from "../api/apiManager";
 
@@ -26,7 +27,6 @@ const DriverList = (props) => {
 
   const getAssignments = () => {
     apiManager.getAllType("assignments").then((r) => {
-      // r.sort((a, b) => a.driver.name.localeCompare(b.driver.name));
       setAssignments(r);
     });
   };
@@ -36,8 +36,6 @@ const DriverList = (props) => {
   const handleSearchChange = (e) => {
     setSearchField(e.target.value.toLowerCase());
   };
-
-  const [sortField, setSortField] = useState(null);
 
   let filteredAssignments = assignments
     .filter((each) => each.route.name.includes(chosenRoute))
@@ -53,9 +51,10 @@ const DriverList = (props) => {
     .sort((a, b) => a.vehicle.company.localeCompare(b.vehicle.company))
     .sort((a, b) => a.date.date.localeCompare(b.date.date));
 
+  const [sortField, setSortField] = useState(null);
+
   if (sortField === "date") {
-    filteredAssignments.sort((a, b) =>
-      a.date.date.localeCompare(b.date.date));
+    filteredAssignments.sort((a, b) => a.date.date.localeCompare(b.date.date));
   } else if (sortField === "driver") {
     filteredAssignments.sort((a, b) =>
       a.driver.name.localeCompare(b.driver.name)
@@ -68,6 +67,10 @@ const DriverList = (props) => {
     filteredAssignments.sort((a, b) =>
       a.route.name.localeCompare(b.route.name)
     );
+  } else if (sortField === "local") {
+    filteredAssignments.sort((a, b) =>
+      a.driver.isLocal === b.driver.isLocal ? 0 : a.driver.isLocal ? -1 : 1
+    );
   }
 
   useEffect(() => {
@@ -78,6 +81,8 @@ const DriverList = (props) => {
   if (filteredAssignments.length !== 0) {
     totalDriverCount = filteredAssignments.length;
   }
+
+  const [arrow, setArrow] = useState(null);
 
   return (
     <>
@@ -153,34 +158,58 @@ const DriverList = (props) => {
             <TableRow>
               {chosenDateId === "" ? (
                 <TableCell
+                  className="table_column_header"
                   style={{ fontWeight: 600 }}
                   onClick={() => setSortField("date")}
+                  onMouseEnter={() => setArrow("date")}
+                  onMouseLeave={() => setArrow("")}
                 >
-                  Date
+                  Dates
+                  {arrow === "date" ? <ArrowDropDownIcon /> : null}
                 </TableCell>
               ) : null}
               <TableCell
+                className="table_column_header"
                 style={{ fontWeight: 600 }}
                 onClick={() => setSortField("driver")}
+                onMouseEnter={() => setArrow("driver")}
+                onMouseLeave={() => setArrow("")}
               >
                 Name
-                <div>Number</div>
+                <div>Phone #</div>
+                {arrow === "driver" ? <ArrowDropDownIcon /> : null}
               </TableCell>
               <TableCell
+                className="table_column_header"
                 style={{ fontWeight: 600 }}
                 onClick={() => setSortField("company")}
+                onMouseEnter={() => setArrow("company")}
+                onMouseLeave={() => setArrow("")}
               >
                 Company<div>Vehicle #</div>
+                {arrow === "company" ? <ArrowDropDownIcon /> : null}
               </TableCell>
               {chosenRoute === "" ? (
                 <TableCell
+                  className="table_column_header"
                   style={{ fontWeight: 600 }}
                   onClick={() => setSortField("route")}
+                  onMouseEnter={() => setArrow("route")}
+                  onMouseLeave={() => setArrow("")}
                 >
                   Route
+                  {arrow === "route" ? <ArrowDropDownIcon /> : null}
                 </TableCell>
               ) : null}
-              <TableCell style={{ fontWeight: 600 }}>Local</TableCell>
+              <TableCell
+                style={{ fontWeight: 600 }}
+                onClick={() => setSortField("local")}
+                onMouseEnter={() => setArrow("local")}
+                onMouseLeave={() => setArrow("")}
+              >
+                Local
+                {arrow === "local" ? <ArrowDropDownIcon /> : null}
+              </TableCell>
               <TableCell style={{ fontWeight: 600 }}>Notes</TableCell>
               <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
