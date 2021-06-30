@@ -5,6 +5,7 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import RouteGraph from "./routeGraph";
+import TestGraph from "./testGraph";
 import AllRoutesGraph from "./allRoutesGraph";
 import AllPlacesGraph from "./allPlacesGraph";
 import apiManager from "../api/apiManager";
@@ -209,6 +210,15 @@ const RouteReport = (props) => {
       </div>
       {filteredEntries.length !== 0 ? (
         <>
+        {/* <div className="graph">
+            <TestGraph
+              filteredEntries={filteredEntries}
+              accumulated={accumulatedAll}
+              xRange={xRange}
+              timeSpanIntervals={timeSpanIntervals}
+              {...props}
+            />
+          </div> */}
           <div className="graph">
             <RouteGraph
               filteredEntries={filteredEntries}

@@ -15,7 +15,6 @@ const AssignmentFinder = (props) => {
     each.vehicle.number.includes(props.match.params.vehNum)
   );
 
-  // something wrong with doing it by date
   // not sure now actually, seems fine on 07/16
 
   useEffect(() => {

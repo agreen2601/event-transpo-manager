@@ -14,6 +14,8 @@ const DriverEditForm = (props) => {
     phone_number: "",
     notes: "",
     isLocal: Boolean,
+    area: "",
+    area_id: ""
   });
 
   var [isChecked, setIsChecked] = useState(false);
@@ -27,6 +29,7 @@ const DriverEditForm = (props) => {
       .then((driver) => {
         setDriver(driver);
         setIsChecked(driver.isLocal);
+        console.log(driver)
       });
   }, [props.match.params.driverId]);
 
@@ -42,9 +45,12 @@ const DriverEditForm = (props) => {
     phone_number: driver.phone_number,
     isLocal: isChecked,
     notes: driver.notes,
+    area: driver.area,
+    area_id: driver.area_id
   };
 
   const handleSubmit = (e) => {
+    console.log(editedDriver)
     e.preventDefault();
     apiManager
       .updateType("drivers", editedDriver)

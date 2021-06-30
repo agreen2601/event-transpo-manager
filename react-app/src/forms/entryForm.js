@@ -261,37 +261,3 @@ const EntryForm = (props) => {
 };
 
 export default EntryForm;
-
-// <Grid item xs={12} md={3}>
-//             <FormControl style={{ width: 200 }}>
-//               <InputLabel>Route:</InputLabel>
-//               <Select
-//                 id="route_id"
-//                 // native
-//                 onChange={handleChosenRouteChange}
-//                 fullWidth
-//                 value={chosenRoute}
-//               >
-//                 <MenuItem aria-label="None" value="">
-//                   None
-//                 </MenuItem>
-//                 {routes ? (
-//                   routes.map((route) => (
-//                     // <>
-//                     //   {route.name < 10 ? (
-//                     //     <MenuItem key={route.id} value={route.name}>
-//                     //       {route.name.slice(1)} {route.description}
-//                     //     </MenuItem>
-//                     //   ) : (
-//                         <MenuItem key={route.id} value={route.name}>
-//                           {route.name} {route.description}
-//                         </MenuItem>
-//                     //   )}
-//                     // </>
-//                   ))
-//                 ) : (
-//                   <></>
-//                 )}
-//               </Select>
-//             </FormControl>
-//           </Grid>
