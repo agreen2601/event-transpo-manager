@@ -1,5 +1,6 @@
 {
   "name": "final-capstone-react-app",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,6 +24,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "engines": {
+    "node": "12.14.0",
+    "npm": "6.13.4"
+},
   "eslintConfig": {
     "extends": "react-app"
   },
