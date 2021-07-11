@@ -34,8 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch": "npm-watch",
-    "heroku-postbuild": "npm run build"
+    "watch": "npm-watch"
   },
   "engines": {
     "node": "12.14.0",
