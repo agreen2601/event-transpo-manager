@@ -99,7 +99,7 @@ ROOT_URLCONF = 'eventtranspotracker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'build')],
+        'DIRS': [os.path.join(BASE_DIR, 'heroku-postbuild')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
