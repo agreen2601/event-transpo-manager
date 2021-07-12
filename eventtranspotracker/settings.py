@@ -17,7 +17,6 @@ import dj_database_url
 from pathlib import Path
 import os
 import environ
-# import psycopg2
 
 # Initialise environment variables
 env = environ.Env()
@@ -25,8 +24,6 @@ environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-print("base dir path", BASE_DIR)
 
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
@@ -39,13 +36,13 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 
 # Application definition
 
@@ -123,8 +120,6 @@ DATABASES = {}
 DATABASES['default'] = dj_database_url.config(
     conn_max_age=600, ssl_require=True)
 DATABASE_URL = os.environ['DATABASE_URL']
-
-# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 
 # Password validation

@@ -17,6 +17,8 @@ const RouteView = (props) => {
     each.name.includes(chosenRoute)
   );
 
+  console.log(routes)
+
   return (
     <>
       <Typography component="h1" variant="h5" className="page-header">
