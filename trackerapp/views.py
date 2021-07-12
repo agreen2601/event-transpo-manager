@@ -3,6 +3,7 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseNotFound
 import os
 
+
 class Assets(View):
 
     def get(self, _request, filename):

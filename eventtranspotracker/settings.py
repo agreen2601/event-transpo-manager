@@ -55,11 +55,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'trackerapp',
+    'trackerapp'
 ]
 
 REST_FRAMEWORK = {
@@ -119,7 +120,8 @@ WSGI_APPLICATION = 'eventtranspotracker.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.config(
+    conn_max_age=600, ssl_require=True)
 DATABASE_URL = os.environ['DATABASE_URL']
 
 # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -163,11 +165,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'build/static')
-]
+STATICFILES_DIRS = []
+    # os.path.join(BASE_DIR, 'build/static')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'static')
 
 django_heroku.settings(locals())
 
