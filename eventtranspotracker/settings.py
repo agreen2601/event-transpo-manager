@@ -17,7 +17,7 @@ import dj_database_url
 from pathlib import Path
 import os
 import environ
-import psycopg2
+# import psycopg2
 
 # Initialise environment variables
 env = environ.Env()
@@ -165,11 +165,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = []
-    # os.path.join(BASE_DIR, 'build/static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static')
+]
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'build')
 
 django_heroku.settings(locals())
 

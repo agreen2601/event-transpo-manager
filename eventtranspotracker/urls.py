@@ -22,7 +22,6 @@ from trackerapp.views import *
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import index
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -40,8 +39,7 @@ router.register(r'areas', Areas, 'area')
 router.register(r'events', Events, 'event')
 
 urlpatterns = [
-    # path('', include(router.urls)),
-    path('', index, name='index'),
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('register/', register_user),
     path('login/', login_user),
