@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: npm start
+web: gunicorn eventtranspotracker.wsgi --log-file -
