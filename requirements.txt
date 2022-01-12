@@ -17,7 +17,7 @@ isort==4.3.21
 lazy-object-proxy==1.4.2
 mccabe==0.6.1
 pep8==1.7.1
-pipenv==2020.11.15
+pipenv==2022.1.8
 psycopg2==2.9.1
 psycopg2-binary==2.9.1
 pycodestyle==2.5.0
